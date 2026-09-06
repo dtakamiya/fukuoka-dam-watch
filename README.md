@@ -199,10 +199,28 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
   - `FETCH_DAMS_BASE_URL=<url>` — CSV ダウンロード URL のベースを差し替える（失敗系テスト用）
   - `FETCH_DAMS_RETAIN_DAYS=<n>` — `history.json` に残す日数（既定 40）
 
-## 自動更新（GitHub Actions）
+## 自動更新
 
-`.github/workflows/update-data.yml` が **30分毎**（`schedule: "7,37 * * * *"`, 毎時07分・37分）に
-`scripts/fetch-dams.mjs` を実行し、`data/latest.json` / `data/history.json` を更新する。
+データ更新（CSV 取得 → `data/latest.json` / `data/history.json` の再生成 → 差分コミット）は
+GitHub Actions ワークフロー `.github/workflows/update-data.yml` が実行する。
+このワークフローを起動するトリガーは **2 系統**あり、主・保険の役割が分かれている。
+
+| トリガー | 主/保険 | 実体 | 挙動 |
+|---|---|---|---|
+| ローカル `launchd` | **主トリガー** | だいすけの Mac 上の `com.dtakamiya.fukuoka-dam-watch-dispatch` が毎時 :17 / :47 に `scripts/dispatch-update-data.sh` を実行し、`gh workflow run update-data.yml` で `workflow_dispatch` を投げる | 発火が正確。ただし Mac スリープ中は動かず、復帰時にまとめて catch-up する |
+| GitHub `schedule` | 保険（冗長） | `update-data.yml` の `on.schedule: "7,37 * * * *"`（毎時07分・37分） | GitHub ホスト型 schedule は発火が大きく遅れる・混雑時にドロップすることがあるため、主トリガー扱いにはしない |
+
+### `scripts/dispatch-update-data.sh`（主トリガーのディスパッチャ）
+
+- launchd の最小 PATH でも `gh` を解決できるよう Homebrew のパスを明示している。
+- `gh` が見つからなければ exit 127 で明示終了する（launchd のログで失敗が分かる）。
+- **このスクリプトはリポジトリ管理下にある。** 過去に Git 未追跡のローカルファイルとして
+  存在していた時期に、ブランチ操作中の untracked ファイル削除で消失し、launchd が
+  exit 127 を繰り返して毎時ディスパッチが停止した事故があった（2026-09-06）。
+  以降は追跡ファイルとしてコミットしてあるので `git checkout` / `git clean` で消えない。
+- データ鮮度は Ryoko の cron ジョブ `weekend-lab-dam-freshness`（毎日 10:23 / 20:23 JST）が
+  監視しており、`update-data` の run が直近 3 時間 1 件も無い（= launchd 停止）場合も
+  異常として検知し、自己修復ディスパッチ＋ Slack 通知する。
 
 ### 画面への反映（クライアント側の自動更新）
 
