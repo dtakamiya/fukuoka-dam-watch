@@ -200,6 +200,16 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
 `.github/workflows/update-data.yml` が **30分毎**（`schedule: "7,37 * * * *"`, 毎時07分・37分）に
 `scripts/fetch-dams.mjs` を実行し、`data/latest.json` / `data/history.json` を更新する。
 
+### 画面への反映（クライアント側の自動更新）
+
+ページは初回表示に加え、**10分ごと**および**タブがバックグラウンドから復帰したとき**
+（直近取得から2分以上経過している場合）に `data/*.json` を再取得して再描画する。
+そのため、ページを開いたままでも手動リロードなしで最新値が反映される。
+グラフの期間・指標・系列トグルの選択状態は再取得後も維持される。
+再取得が一時的に失敗しても、その時点の表示はそのまま保持する。
+
+### GitHub Actions の詳細
+
 - **手動実行**: Actions タブ → **update-data** → **Run workflow**（`workflow_dispatch`）。
   初回運用や Pages 公開直後の初期データ投入はこれで行う。
 - **差分判定**: 実データ2ファイルは `.gitignore` 対象なので `git add -f` で強制ステージし、
