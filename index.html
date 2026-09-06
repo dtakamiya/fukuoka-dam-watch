@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>fukuoka-dam-watch — 福岡市関連9ダム貯水状況</title>
   <meta name="description" content="福岡市関連9ダム（南畑・五ケ山・脊振・曲渕・江川・久原・長谷・猪野・瑞梅寺）の貯水量・貯水率を1時間粒度で可視化する静的サイト。">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <header class="site-header">
-    <h1>福岡市関連9ダム 貯水状況</h1>
-    <p class="tagline">貯水量・貯水率を1時間粒度で可視化</p>
+    <div class="site-header-inner">
+      <h1>福岡市関連9ダム 貯水状況</h1>
+      <p class="tagline">貯水量・貯水率を1時間粒度で可視化</p>
+    </div>
   </header>
 
   <main class="site-main">
@@ -25,24 +28,33 @@
     <section class="summary-section" aria-labelledby="summary-heading">
       <h2 id="summary-heading" class="visually-hidden">9ダム合計</h2>
       <div class="summary-card" id="summary-card">
-        <p class="summary-label">9ダム合計 貯水率</p>
-        <p class="summary-rate" id="summary-rate">—</p>
-        <p class="summary-detail" id="summary-detail">貯水量 — ／ 総容量 —</p>
-        <p class="summary-delta" id="summary-delta"></p>
+        <div class="summary-ring" id="summary-ring"></div>
+        <div class="summary-body">
+          <p class="summary-label">9ダム合計 貯水率</p>
+          <p class="summary-detail" id="summary-detail">貯水量 — ／ 総容量 —</p>
+          <p class="summary-delta" id="summary-delta"></p>
+          <div class="breakdown" id="summary-breakdown"></div>
+          <div class="sparkline" id="summary-sparkline"></div>
+        </div>
       </div>
     </section>
 
     <section class="dam-list-section" aria-labelledby="dam-list-heading">
-      <h2 id="dam-list-heading">ダム別（9ダム）</h2>
+      <div class="section-head">
+        <h2 id="dam-list-heading">ダム別（9ダム）</h2>
+        <p class="legend" aria-hidden="true">
+          <span class="legend-item"><span class="swatch is-safe"></span>安全 (≥70%)</span>
+          <span class="legend-item"><span class="swatch is-watch"></span>注意 (50–70%)</span>
+          <span class="legend-item"><span class="swatch is-alert"></span>警戒 (30–50%)</span>
+          <span class="legend-item"><span class="swatch is-crit"></span>危険 (&lt;30%)</span>
+        </p>
+      </div>
       <ul class="dam-list" id="dam-list">
         <!-- assets/app.js が描画 -->
       </ul>
-      <p class="legend" aria-hidden="true">
-        <span class="legend-item"><span class="swatch is-normal"></span>平常 (≥60%)</span>
-        <span class="legend-item"><span class="swatch is-caution"></span>注意 (30–60%)</span>
-        <span class="legend-item"><span class="swatch is-drought"></span>渇水 (&lt;30%)</span>
-      </p>
     </section>
+
+    <a class="chart-cta" href="#chart-heading">推移グラフを見る ↓</a>
 
     <section class="chart-section" aria-labelledby="chart-heading">
       <h2 id="chart-heading">推移グラフ</h2>
