@@ -252,7 +252,22 @@ function loadJson(realPath, samplePath) {
     });
 }
 
-function init() {
+/*
+ * 自動更新（クライアント側）
+ *   サーバ側は GitHub Actions が毎時データを更新する（README「自動更新」参照）。
+ *   ページを開きっぱなしでも最新値が出るよう、以下の2契機で再取得する:
+ *     - REFRESH_MS ごとの定期ポーリング
+ *     - タブがバックグラウンドから復帰したとき（直近取得から一定時間空いていれば）
+ *   再取得時はグラフのトグル状態（期間・指標・系列 on/off）を壊さないよう
+ *   initChart（トグルの再バインド）は呼ばず、renderChart だけを更新する。
+ */
+var REFRESH_MS = 10 * 60 * 1000;          // 定期再取得の間隔
+var VISIBILITY_MIN_GAP_MS = 2 * 60 * 1000; // タブ復帰で再取得する最小経過時間
+var dataState = { loading: false, lastLoadAt: 0 };
+
+function load(isRefresh) {
+  if (dataState.loading) return;
+  dataState.loading = true;
   Promise.all([
     loadJson("data/latest.json", "data/latest.sample.json"),
     loadJson("data/history.json", "data/history.sample.json")
@@ -270,10 +285,30 @@ function init() {
     renderDamList(latest.dams, deltas);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
-    initChart(history);
+    if (isRefresh) {
+      chartState.history = history;
+      renderChart();
+    } else {
+      initChart(history);
+    }
+    dataState.lastLoadAt = Date.now();
   }).catch(function (err) {
-    renderStatus("error", null);
+    // 初回のみエラー表示。再取得の一時失敗は現在の表示を維持する
+    if (!isRefresh) renderStatus("error", null);
     if (window.console) console.error("[fukuoka-dam-watch] データ取得に失敗:", err);
+  }).then(function () {
+    dataState.loading = false;
+  });
+}
+
+function init() {
+  load(false);
+  setInterval(function () { load(true); }, REFRESH_MS);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" &&
+        Date.now() - dataState.lastLoadAt > VISIBILITY_MIN_GAP_MS) {
+      load(true);
+    }
   });
 }
 
