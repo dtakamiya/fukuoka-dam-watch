@@ -1,0 +1,73 @@
+# 福岡市関連9ダム 貯水量データを毎正時に取得・正規化してコミットする。
+#
+# 流れ:
+#   1. scripts/fetch-dams.mjs が BODIK の当月 CSV を取得し、既存の data/history.json に
+#      累積マージして data/latest.json / data/history.json を再生成する。
+#      取得・デコード・パースに失敗した場合はスクリプトが非ゼロ終了し、既存 JSON は
+#      書き換えられない → このジョブも失敗し、Actions 上で赤く可視化される。
+#   2. 差分判定: data/latest.json / data/history.json は .gitignore 対象のため
+#      `git add -f` で強制ステージし、`git diff --cached --quiet` で判定する。
+#        - 差分なし  → 何もコミットせず正常終了
+#        - 差分あり  → github-actions[bot] 名義でコミットして push
+#      スクリプトは観測値が変わらない限り generatedAt だけの書き換えを行わないので、
+#      BODIK が未更新の正時ではファイルが変化せず、コミットも発生しない。
+#   3. push が他ジョブと競合したら rebase して最大3回まで再試行する。
+#
+# sample データ（data/*.sample.json）はこのワークフローの対象外（手動で make-sample-data.mjs）。
+# 手動実行したい場合は Actions タブ → "update-data" → "Run workflow"（workflow_dispatch）。
+
+name: update-data
+
+on:
+  schedule:
+    # 毎時05分（UTC）。BODIK 側の正時更新に少し余裕を持たせる。
+    - cron: "5 * * * *"
+  workflow_dispatch: {}
+
+# push に必要な最小スコープのみ。
+permissions:
+  contents: write
+
+# 実行が重ならないようにする（push 競合の抑制）。走行中のジョブは中断しない。
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # Node バージョンは固定（fetch / TextDecoder('shift_jis') / AbortSignal.timeout を使用）。
+          node-version: "22.11.0"
+
+      - name: Fetch & normalize dam data
+        run: node scripts/fetch-dams.mjs
+
+      - name: Commit & push if data changed
+        run: |
+          set -euo pipefail
+          # 実データは .gitignore 対象なので -f で強制ステージ
+          git add -f data/latest.json data/history.json
+          if git diff --cached --quiet; then
+            echo "データに差分なし。コミットをスキップします。"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): 毎正時データ更新 $(date -u +'%Y-%m-%dT%H:%MZ') [skip ci]"
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "push 成功（$attempt 回目）"
+              exit 0
+            fi
+            echo "push 失敗（$attempt 回目）。rebase して再試行します。"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          done
+          echo "push に3回失敗しました。" >&2
+          exit 1

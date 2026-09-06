@@ -326,17 +326,41 @@ async function main() {
     })),
   };
 
-  // --- 原子的に書き出し（成功時のみ本ファイルを置換） ---
+  // --- 書き出し（データ内容が変わったファイルだけ原子的に置換） ---
   await mkdir(DATA_DIR, { recursive: true });
-  await writeAtomic(join(DATA_DIR, "latest.json"), latestJson);
-  await writeAtomic(join(DATA_DIR, "history.json"), historyJson);
-  log(`書き出し完了: data/latest.json (observedAt ${last.observedAt}), data/history.json (${merged.length} 点)`);
+  const w1 = await writeIfChanged(join(DATA_DIR, "latest.json"), latestJson);
+  const w2 = await writeIfChanged(join(DATA_DIR, "history.json"), historyJson);
+  log(
+    `latest.json: ${w1 ? "更新" : "変更なし"} (observedAt ${last.observedAt}) / ` +
+      `history.json: ${w2 ? "更新" : "変更なし"} (${merged.length} 点)`,
+  );
 }
 
-async function writeAtomic(path, obj) {
+/**
+ * data 内容が既存ファイルと（generatedAt 等の揮発フィールドを除いて）同じなら
+ * 書き込まない。GitHub Actions が毎正時実行しても、観測値が変わらない限り
+ * ファイルが書き換わらず、差分が出ない＝コミットされないようにする。
+ * 返り値: 書き込んだら true。
+ */
+const VOLATILE_KEYS = ["generatedAt"];
+async function writeIfChanged(path, obj) {
+  const stripVolatile = (o) => {
+    const c = { ...o };
+    for (const k of VOLATILE_KEYS) delete c[k];
+    return JSON.stringify(c);
+  };
+  if (existsSync(path)) {
+    try {
+      const prev = JSON.parse(await readFile(path, "utf-8"));
+      if (stripVolatile(prev) === stripVolatile(obj)) return false; // 実データに変化なし
+    } catch {
+      /* 壊れている等 → そのまま上書き */
+    }
+  }
   const tmp = `${path}.tmp`;
   await writeFile(tmp, JSON.stringify(obj, null, 2) + "\n", "utf-8");
   await rename(tmp, path);
+  return true;
 }
 
 main().catch((e) => {

@@ -10,7 +10,8 @@
 
 - `wl-dam-01` — サイト雛形（配置済み）
 - `wl-dam-02` — データ取得・正規化スクリプト（`scripts/fetch-dams.mjs`、**実装済み**）
-- `wl-dam-03` — GitHub Actions 毎正時更新 ＋ 推移グラフ（未実装、`org/weekend-lab/backlog.json` を参照）
+- `wl-dam-03` — GitHub Actions 毎正時データ更新（`.github/workflows/update-data.yml`、**実装済み**）
+- `wl-dam-04` 以降 — フロントの現在値表示・推移グラフ（未実装、`org/weekend-lab/backlog.json` を参照）
 
 フロントの現在値表示・グラフ描画は、実データが無くても `data/*.sample.json` で開発できる。
 
@@ -161,10 +162,27 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
 - 当月 CSV の取得・デコード・パースに失敗した場合は **既存の `data/*.json` を書き換えず** に
   理由を stderr に出して exit 1。成功時のみ一時ファイル経由で原子的に差し替える。
 - 前月 CSV の欠落や既存 `history.json` の破損は警告のみで続行する。
+- 観測値に変化が無い正時は `generatedAt` だけの書き換えを行わない（ファイルが変化しない）。
 - 環境変数（CI・デバッグ用）:
   - `FETCH_DAMS_LOCAL_DIR=<dir>` — HTTP 取得の代わりに `<dir>/YYYYMMdata.csv` を読む（オフライン擬似実行）
   - `FETCH_DAMS_BASE_URL=<url>` — CSV ダウンロード URL のベースを差し替える（失敗系テスト用）
   - `FETCH_DAMS_RETAIN_DAYS=<n>` — `history.json` に残す日数（既定 40）
+
+## 自動更新（GitHub Actions）
+
+`.github/workflows/update-data.yml` が **毎正時**（`schedule: "5 * * * *"`, UTC 毎時05分）に
+`scripts/fetch-dams.mjs` を実行し、`data/latest.json` / `data/history.json` を更新する。
+
+- **手動実行**: Actions タブ → **update-data** → **Run workflow**（`workflow_dispatch`）。
+  初回運用や Pages 公開直後の初期データ投入はこれで行う。
+- **差分判定**: 実データ2ファイルは `.gitignore` 対象なので `git add -f` で強制ステージし、
+  `git diff --cached --quiet` で判定する。**差分があるときだけ** `github-actions[bot]` 名義で
+  コミットして push する。BODIK 未更新の正時はファイルが変化しないためコミットされない。
+- **権限**: `contents: write` のみ（push に必要な最小スコープ）。
+- **失敗の可視化**: CSV 取得・パースに失敗すると `fetch-dams.mjs` が非ゼロ終了し、
+  既存 JSON を保持したままジョブが失敗する（Actions 上で赤表示）。
+- Node バージョンは `actions/setup-node` で固定（`22.11.0`）。
+- `sample` データ（`data/*.sample.json`）はこのワークフローの対象外。
 
 ## 開発
 
