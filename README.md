@@ -11,7 +11,8 @@
 - `wl-dam-01` — サイト雛形（配置済み）
 - `wl-dam-02` — データ取得・正規化スクリプト（`scripts/fetch-dams.mjs`、**実装済み**）
 - `wl-dam-03` — GitHub Actions 毎正時データ更新（`.github/workflows/update-data.yml`、**実装済み**）
-- `wl-dam-04` 以降 — フロントの現在値表示・推移グラフ（未実装、`org/weekend-lab/backlog.json` を参照）
+- `wl-dam-04` — フロントの現在値ビュー（9ダム個別カード＋合計サマリ・前時点比・色分け、**実装済み**）
+- `wl-dam-05` 以降 — 推移グラフ（24h / 7d / 30d、未実装、`org/weekend-lab/backlog.json` を参照）
 
 フロントの現在値表示・グラフ描画は、実データが無くても `data/*.sample.json` で開発できる。
 
@@ -35,8 +36,10 @@ python3 -m http.server 8000
 # → http://localhost:8000/ をブラウザで開く
 ```
 
-確認ポイント: ヘッダ「福岡市関連9ダム 貯水状況」／9ダム名＋「合計」のカード一覧／
-「データ未取得」バナー／フッタの出典表記（福岡市オープンデータ / BODIK）が表示されること。
+確認ポイント: ヘッダ「福岡市関連9ダム 貯水状況」／合計サマリ（貯水率を大きく表示）／
+9ダム個別カード（貯水率・貯水量・前時点比・平常/注意/渇水の色分け）／観測時刻と取得元の表示／
+フッタの出典表記（福岡市オープンデータ / BODIK）。実データが読めない場合は
+`data/*.sample.json` にフォールバックし「サンプルデータ表示中」バッジが出ること。
 JS 構文チェックは `node --check assets/app.js`。
 
 ### ローカル開発時のデータ
@@ -48,6 +51,23 @@ JS 構文チェックは `node --check assets/app.js`。
 実データを手元で作りたい場合は `node scripts/fetch-dams.mjs` を実行する。
 
 ## スクリーンショット
+
+### 現在値ビュー（wl-dam-04）
+
+合計サマリと bootstrapping 注記（PC 幅）:
+
+![現在値ビュー・上部（PC）](docs/screenshots/current-view-pc-top.png)
+
+9ダム個別カード（貯水率で色分け・前時点比つき、PC 幅）:
+
+![現在値ビュー・ダム別カード（PC）](docs/screenshots/current-view-pc-cards.png)
+
+スマホ幅（1 カラムに折り返し）:
+
+![現在値ビュー・上部（スマホ）](docs/screenshots/current-view-mobile-top.png)
+![現在値ビュー・ダム別カード（スマホ）](docs/screenshots/current-view-mobile-cards.png)
+
+### サイト雛形（wl-dam-01）
 
 ![サイト雛形（wl-dam-01）](docs/screenshots/scaffold-site.png)
 
