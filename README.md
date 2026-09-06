@@ -8,8 +8,42 @@
 
 ## 状態
 
-初期セットアップ中。サイト本体・データ取得パイプラインはこれから実装する
-（`org/weekend-lab/backlog.json` の `wl-dam-01`〜 を参照）。
+サイト雛形（`wl-dam-01`）を配置済み。ヘッダ・9ダム名一覧・「データ未取得」プレースホルダ・
+出典フッタのみの静的ページ。データ取得パイプライン（`wl-dam-02`）と推移グラフ（`wl-dam-03`）は未実装
+（`org/weekend-lab/backlog.json` を参照）。
+
+## 公開 URL（予定）
+
+<https://dtakamiya.github.io/fukuoka-dam-watch/>
+
+GitHub Pages（`main` ブランチのルート）で公開する想定。ルート直下に `index.html` と
+`.nojekyll`（Jekyll 処理を無効化）を置いてある。Pages の有効化操作は別途行う。
+
+## ローカル確認手順
+
+ビルドステップはない。以下のいずれかで確認できる。
+
+```sh
+# 方法1: ファイルを直接開く
+open index.html
+
+# 方法2: 簡易 HTTP サーバ（相対パス・fetch を伴う後続タスクの確認向け）
+python3 -m http.server 8000
+# → http://localhost:8000/ をブラウザで開く
+```
+
+確認ポイント: ヘッダ「福岡市関連9ダム 貯水状況」／9ダム名＋「合計」のカード一覧／
+「データ未取得」バナー／フッタの出典表記（福岡市オープンデータ / BODIK）が表示されること。
+JS 構文チェックは `node --check assets/app.js`。
+
+## スクリーンショット
+
+![サイト雛形（wl-dam-01）](docs/screenshots/scaffold-site.png)
+
+## 使用ライブラリ
+
+- 推移グラフは **Chart.js**（CDN 参照・バンドラなし）を採用予定。ライブラリは1つに限定する。
+  `wl-dam-03` で `assets/app.js` に実装する。
 
 ## データソース
 
