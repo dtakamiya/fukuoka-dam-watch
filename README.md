@@ -197,7 +197,7 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
 
 ## 自動更新（GitHub Actions）
 
-`.github/workflows/update-data.yml` が **毎時30分**（`schedule: "30 * * * *"`）に
+`.github/workflows/update-data.yml` が **30分毎**（`schedule: "0,30 * * * *"`, 毎時00分・30分）に
 `scripts/fetch-dams.mjs` を実行し、`data/latest.json` / `data/history.json` を更新する。
 
 - **手動実行**: Actions タブ → **update-data** → **Run workflow**（`workflow_dispatch`）。
