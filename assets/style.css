@@ -1,0 +1,133 @@
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #1c2733;
+  --text-muted: #5c6b7a;
+  --border: #d9e0e6;
+  --accent: #0b6e99;
+  --warn: #b5761f;
+  --radius: 8px;
+  --maxw: 880px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.site-header {
+  background: var(--accent);
+  color: #fff;
+  padding: 1.6rem 1.2rem;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0 0 0.3rem;
+  font-size: 1.5rem;
+}
+
+.site-header .tagline {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.site-main {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.5rem 1.2rem 2.5rem;
+}
+
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #fff8ec;
+  border: 1px solid #e7d3ac;
+  color: var(--warn);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  font-size: 0.92rem;
+}
+
+.status-dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--warn);
+}
+
+.dam-list-section,
+.chart-section {
+  margin-top: 2rem;
+}
+
+.dam-list-section h2,
+.chart-section h2 {
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.dam-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.7rem;
+}
+
+.dam-list li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+}
+
+.dam-list .dam-name {
+  font-weight: 600;
+}
+
+.dam-list .dam-value {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dam-list li.is-total {
+  border-color: var(--accent);
+  background: #eef7fb;
+}
+
+.chart-placeholder {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.site-footer {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.5rem 1.2rem 2.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.site-footer p { margin: 0.3rem 0; }
+
+.site-footer a {
+  color: var(--accent);
+}

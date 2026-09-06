@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fukuoka-dam-watch — 福岡市関連9ダム貯水状況</title>
+  <meta name="description" content="福岡市関連9ダム（南畑・五ケ山・脊振・曲渕・江川・久原・長谷・猪野・瑞梅寺）の貯水量・貯水率を1時間粒度で可視化する静的サイト。">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>福岡市関連9ダム 貯水状況</h1>
+    <p class="tagline">貯水量・貯水率を1時間粒度で可視化（初期セットアップ中）</p>
+  </header>
+
+  <main class="site-main">
+    <section class="status-banner" id="data-status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      データ未取得 — データ取得パイプライン（wl-dam-02 以降）実装後に表示されます
+    </section>
+
+    <section class="dam-list-section" aria-labelledby="dam-list-heading">
+      <h2 id="dam-list-heading">対象ダム（9ダム＋合計）</h2>
+      <ul class="dam-list" id="dam-list">
+        <!-- assets/app.js が描画 -->
+      </ul>
+    </section>
+
+    <section class="chart-section" aria-labelledby="chart-heading">
+      <h2 id="chart-heading">推移グラフ</h2>
+      <div class="chart-placeholder" id="chart">
+        グラフは後続タスク（wl-dam-03 以降）で実装します。
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      出典: 福岡市オープンデータ / BODIK
+      （<a href="https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1" rel="noopener noreferrer" target="_blank">福岡市関連9ダム貯水量データセット</a>、
+      <a href="https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html" rel="noopener noreferrer" target="_blank">福岡市「きょうのダム状況」</a>）
+    </p>
+    <p>ダムデータは福岡市オープンデータの利用条件に従います。コードは MIT ライセンス。</p>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
