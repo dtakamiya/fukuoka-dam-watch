@@ -71,14 +71,91 @@ function fmtRate(n) {
   return (Math.round(n * 10) / 10).toFixed(1) + "%";
 }
 
-// 増減を符号付きで。unit は "千m3" or "pt"
+// 増減を符号付き数値文字列に。unit は "千m³" or "pt"。
+// 方向の矢印は付けない（向きは makeIndicator が形状アイコン＋色で別途示す）。
 function fmtDelta(n, unit, digits) {
   if (n == null || isNaN(n)) return null;
   var rounded = digits ? Math.round(n * 10) / 10 : Math.round(n);
   if (rounded === 0) return "±0 " + unit;
-  var sign = rounded > 0 ? "▲ +" : "▼ ";
   var body = digits ? Math.abs(rounded).toFixed(1) : fmtInt(Math.abs(rounded));
-  return sign + (rounded > 0 ? "" : "-") + body + " " + unit;
+  return (rounded > 0 ? "+" : "-") + body + " " + unit;
+}
+
+/*
+ * 「横ばい」と見なす増減のしきい値。
+ *   貯水率 |Δrate| < 0.1pt … BODIK 公表の貯水率は小数第1位までの精度なので、
+ *     0.1pt 未満の差は丸め・表記ゆれの範囲。方向を示す意味がないため横ばい扱い。
+ *   貯水量 |Δstorage| < 1千m³ … 貯水量の公表値は 1千m³ 単位。1千m³ 未満は
+ *     報告粒度を下回るため横ばい扱い。
+ */
+var FLAT_RATE_PT = 0.1;
+var FLAT_STORAGE_KM3 = 1;
+
+// 増減の向きを返す: "up" | "down" | "flat"（値が無ければ null）
+function deltaDirection(n, kind) {
+  if (n == null || isNaN(n)) return null;
+  var flat = kind === "rate" ? FLAT_RATE_PT : FLAT_STORAGE_KM3;
+  if (Math.abs(n) < flat) return "flat";
+  return n > 0 ? "up" : "down";
+}
+
+var DIR_ICON = { up: "▲", down: "▼", flat: "→" };
+var DIR_WORD = {
+  storage: { up: "増加", down: "減少", flat: "横ばい" },
+  rate: { up: "上昇", down: "下降", flat: "横ばい" }
+};
+
+/*
+ * 増減インジケータ（チップ）を1つ生成して返す。
+ *   - 形状アイコン（▲上昇 / ▼下降 / →横ばい）＋色（緑 / 赤 / グレー）＋差分値を表示
+ *   - 色だけに依存しないよう、チップ全体に「貯水率 上昇 0.3ポイント」等の aria-label を持たせ、
+ *     アイコンは aria-hidden にしてスクリーンリーダーでの重複読みを防ぐ
+ * kind: "storage" | "rate" / metricLabel: 画面表示名（"貯水量" / "貯水率"）
+ */
+function makeIndicator(n, kind, metricLabel) {
+  var dir = deltaDirection(n, kind);
+  var chip = document.createElement("span");
+  chip.className = "delta-chip";
+  // 非対話要素だが aria-label を確実に読み上げさせるため role="img" を付ける
+  chip.setAttribute("role", "img");
+
+  if (!dir) {
+    chip.classList.add("is-flat");
+    chip.textContent = metricLabel + " —";
+    chip.setAttribute("aria-label", metricLabel + " の前時点比データなし");
+    return chip;
+  }
+  chip.classList.add("is-" + dir);
+
+  var unit = kind === "rate" ? "pt" : "千m³";
+  var valueText = dir === "flat" ? "±0 " + unit : fmtDelta(n, unit, kind === "rate");
+
+  var icon = document.createElement("span");
+  icon.className = "delta-arrow";
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = DIR_ICON[dir];
+
+  var label = document.createElement("span");
+  label.className = "delta-metric";
+  label.textContent = metricLabel;
+
+  var value = document.createElement("span");
+  value.className = "delta-value";
+  value.textContent = valueText;
+
+  chip.appendChild(icon);
+  chip.appendChild(label);
+  chip.appendChild(value);
+
+  if (dir === "flat") {
+    chip.setAttribute("aria-label", metricLabel + " 横ばい 増減なし");
+  } else {
+    var spoken = kind === "rate"
+      ? (Math.round(Math.abs(n) * 10) / 10).toFixed(1) + "ポイント"
+      : fmtInt(Math.abs(n)) + "千立方メートル";
+    chip.setAttribute("aria-label", metricLabel + " " + DIR_WORD[kind][dir] + " " + spoken);
+  }
+  return chip;
 }
 
 // JST の ISO 文字列（+09:00 付き）を "2026-09-06 14:00 (JST)" に
@@ -122,13 +199,14 @@ function renderSummary(total, delta) {
   card.classList.add(rateClass(total.rate));
 
   var deltaEl = document.getElementById("summary-delta");
+  deltaEl.textContent = "";
   if (delta && (delta.storage != null || delta.rate != null)) {
-    var parts = [];
-    var s = fmtDelta(delta.storage, "千m³", false);
-    var r = fmtDelta(delta.rate, "pt", true);
-    if (s) parts.push("貯水量 " + s);
-    if (r) parts.push("貯水率 " + r);
-    deltaEl.textContent = "前時点比 " + parts.join(" ／ ");
+    var lead = document.createElement("span");
+    lead.className = "delta-label";
+    lead.textContent = "前時点比";
+    deltaEl.appendChild(lead);
+    deltaEl.appendChild(makeIndicator(delta.storage, "storage", "貯水量"));
+    deltaEl.appendChild(makeIndicator(delta.rate, "rate", "貯水率"));
   } else {
     deltaEl.textContent = "前時点比 データなし";
   }
@@ -170,12 +248,12 @@ function renderDamList(dams, deltas) {
     delta.className = "dam-delta";
     var dd = deltas[def.key];
     if (dd && (dd.storage != null || dd.rate != null)) {
-      var s = fmtDelta(dd.storage, "千m³", false);
-      var r = fmtDelta(dd.rate, "pt", true);
-      delta.textContent = "前時点比 " + [s ? "貯水量 " + s : null, r ? "率 " + r : null]
-        .filter(Boolean).join(" ／ ");
-      if (dd.storage > 0) delta.classList.add("is-up");
-      else if (dd.storage < 0) delta.classList.add("is-down");
+      var lead = document.createElement("span");
+      lead.className = "delta-label";
+      lead.textContent = "前時点比";
+      delta.appendChild(lead);
+      delta.appendChild(makeIndicator(dd.storage, "storage", "貯水量"));
+      delta.appendChild(makeIndicator(dd.rate, "rate", "貯水率"));
     } else {
       delta.textContent = "前時点比 —";
     }
