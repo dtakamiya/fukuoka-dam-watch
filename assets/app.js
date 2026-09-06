@@ -1,20 +1,22 @@
 /*
- * fukuoka-dam-watch — フロントエンド
+ * fukuoka-dam-watch — フロントエンド（デザイン提案 v1 反映）
  *
  * wl-dam-04（現在値ビュー）の責務:
  *   - data/latest.json を fetch し、9ダム個別カード＋合計サマリを描画する
- *   - 前時点比（増減）は data/history.json の series 末尾2点の差分から算出する
- *     （latest.json 単体には前時点の値が無いため）
+ *   - 貯水率は SVG 円形リングゲージ（充填量＝貯水率・中央に数値）で可視化する（依存追加なし）
+ *   - 合計サマリは「リング＋内訳セグメントバー（安全/注意/警戒/危険の本数）＋直近30日スパークライン」
+ *   - 前時点比は貯水率のみ 1 系統に集約し、数値の下に「▲+0.2pt」相当を出す
+ *     （前時点は latest.json 単体には無いため data/history.json の series 末尾2点の差分から算出）
  *   - 最終更新の表示は latest.observedAt（毎正時の観測時刻）を使う。
- *     generatedAt は「データが最後に変化した時刻」なので最終更新には使わない。
  *   - 実データ取得に失敗したら data/*.sample.json にフォールバックし、
  *     「サンプルデータ表示中」バッジを出す
  *   - bootstrapping: true のときは時系列の蓄積状況を注記する
  *
  * wl-dam-05（推移グラフ）の責務:
  *   - data/history.json の series を Chart.js（CDN・1本）で折れ線描画する
- *   - 期間トグル 24h / 7d / 30d、指標トグル（貯水率 / 貯水量）、系列 on/off
- *     （既定は合計のみ）を提供する
+ *   - 期間トグル 24h / 7d / 30d、指標トグル（貯水率 / 貯水量）、系列 on/off（既定は合計のみ）
+ *   - 貯水率表示時は背景にしきい値ゾーン帯（安全/注意/警戒/危険）を敷き、y 軸を 0–100 に固定、
+ *     平常ライン（60%）を破線、末尾に現在値マーカーを打つ（プラグイン追加なし・自前の inline plugin）
  *   - bootstrapping 中で series が要求期間に満たないときは、ある分だけ描画し注記する
  */
 
@@ -34,29 +36,35 @@ var DAMS = [
 ];
 
 /*
- * 貯水率の色分けしきい値（暫定）
- *   平常 rate >= 60 … 通常運用の目安
- *   注意 30 <= rate < 60 … 節水呼びかけ・監視を強める水準
- *   渇水 rate < 30 … 取水制限・減圧給水が現実味を帯びる水準
- * 根拠: 福岡市の渇水対応（取水制限の検討）は貯水率がおおむね 30% 前後で
- *       俎上に載ることが多く、60% を平常の下限の目安として置いた暫定値。
- *       正式なダム別の基準値が入手でき次第、ダム個別に置き換える。
+ * 貯水率の色分けしきい値（4 段階・暫定）
+ *   安全 rate >= 70 … 通常運用。特段の呼びかけは不要な水準
+ *   注意 50 <= rate < 70 … 平常だが監視強化。降雨が少なければ下振れしやすい帯
+ *   警戒 30 <= rate < 50 … 取水制限の検討ライン。節水呼びかけを強化
+ *   危険 rate < 30 … 取水制限の強化・減圧給水が視野。強い節水要請
+ *
+ * 【仮値】境界値 70 / 50 / 30 は運用検討用のたたき台。
+ *   福岡市の渇水対応（取水制限の検討）は貯水率がおおむね 30% 前後で俎上に載ることが多く、
+ *   平常の下限を 60% としてきた従来値を、状況の温度差が出るよう 50 / 70 で二分した。
+ *   正式なダム別の基準値が入手でき次第、ダム個別の値に置き換える。
  */
-var RATE_NORMAL_MIN = 60;
-var RATE_CAUTION_MIN = 30;
+var RATE_SAFE_MIN = 70;
+var RATE_WATCH_MIN = 50;
+var RATE_ALERT_MIN = 30;
 
 function rateClass(rate) {
   if (rate == null || isNaN(rate)) return "is-unknown";
-  if (rate >= RATE_NORMAL_MIN) return "is-normal";
-  if (rate >= RATE_CAUTION_MIN) return "is-caution";
-  return "is-drought";
+  if (rate >= RATE_SAFE_MIN) return "is-safe";
+  if (rate >= RATE_WATCH_MIN) return "is-watch";
+  if (rate >= RATE_ALERT_MIN) return "is-alert";
+  return "is-crit";
 }
 
 function rateLabel(rate) {
   if (rate == null || isNaN(rate)) return "不明";
-  if (rate >= RATE_NORMAL_MIN) return "平常";
-  if (rate >= RATE_CAUTION_MIN) return "注意";
-  return "渇水";
+  if (rate >= RATE_SAFE_MIN) return "安全";
+  if (rate >= RATE_WATCH_MIN) return "注意";
+  if (rate >= RATE_ALERT_MIN) return "警戒";
+  return "危険";
 }
 
 // 数値を "12,345" 形式に
@@ -69,16 +77,6 @@ function fmtInt(n) {
 function fmtRate(n) {
   if (n == null || isNaN(n)) return "—";
   return (Math.round(n * 10) / 10).toFixed(1) + "%";
-}
-
-// 増減を符号付き数値文字列に。unit は "千m³" or "pt"。
-// 方向の矢印は付けない（向きは makeIndicator が形状アイコン＋色で別途示す）。
-function fmtDelta(n, unit, digits) {
-  if (n == null || isNaN(n)) return null;
-  var rounded = digits ? Math.round(n * 10) / 10 : Math.round(n);
-  if (rounded === 0) return "±0 " + unit;
-  var body = digits ? Math.abs(rounded).toFixed(1) : fmtInt(Math.abs(rounded));
-  return (rounded > 0 ? "+" : "-") + body + " " + unit;
 }
 
 /*
@@ -113,94 +111,114 @@ function spokenDelta(n, kind) {
 }
 
 /*
- * 目立つ方向グリフを1つ生成して返す（大きな数字の隣に置く用）。
- *   - 形状アイコン（▲上昇 / ▼下降 / →横ばい）＋色（緑 / 赤 / グレー）＋差分の絶対値を表示
- *   - しきい値・色・文言は deltaDirection / DIR_ICON / DIR_WORD / spokenDelta を流用（重複実装しない）
- *   - 前時点比データが無ければ null を返す（詳細チップ行が "—" を出すのでグリフは省略）
+ * 貯水率の円形リングゲージを SVG で生成して返す（依存追加なし）。
+ *   size: "sm"（カード用 64px）/ "lg"（合計サマリ用 128px）
+ *   リングの充填量 = 貯水率。色は rateClass に対応（CSS 側で track/prog を着色）。
+ *   中央に貯水率の数値。色に依存しないよう aria-label に「貯水率 73.5%（安全）」を持たせる。
  */
-function makeDeltaGlyph(n, kind, metricLabel) {
-  var dir = deltaDirection(n, kind);
-  if (!dir) return null;
+function makeRing(rate, size) {
+  var big = size === "lg";
+  var box = big ? 128 : 64;
+  var r = big ? 52 : 26;
+  var sw = big ? 12 : 7;
+  var c = 2 * Math.PI * r;
+  var pct = (rate == null || isNaN(rate)) ? 0 : Math.max(0, Math.min(100, rate));
+  var dash = (pct / 100) * c;
 
-  var glyph = document.createElement("span");
-  glyph.className = "delta-glyph is-" + dir;
-  glyph.setAttribute("role", "img");
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 " + box + " " + box);
+  svg.setAttribute("width", String(box));
+  svg.setAttribute("height", String(box));
+  svg.setAttribute("class", "ring-svg " + rateClass(rate));
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "貯水率 " + fmtRate(rate) + "（" + rateLabel(rate) + "）");
 
-  var arrow = document.createElement("span");
-  arrow.className = "delta-glyph-arrow";
-  arrow.setAttribute("aria-hidden", "true");
-  arrow.textContent = DIR_ICON[dir];
+  var mid = box / 2;
+  var round1 = function (v) { return Math.round(v * 10) / 10; };
 
-  var value = document.createElement("span");
-  value.className = "delta-glyph-value";
-  value.setAttribute("aria-hidden", "true");
-  var unit = kind === "rate" ? "pt" : "千m³";
-  value.textContent = dir === "flat"
-    ? "±0" + unit
-    : (kind === "rate"
-        ? (Math.round(Math.abs(n) * 10) / 10).toFixed(1) + unit
-        : fmtInt(Math.abs(n)) + unit);
+  var track = document.createElementNS(NS, "circle");
+  track.setAttribute("cx", String(mid));
+  track.setAttribute("cy", String(mid));
+  track.setAttribute("r", String(r));
+  track.setAttribute("fill", "none");
+  track.setAttribute("stroke-width", String(sw));
+  track.setAttribute("class", "ring-track");
 
-  glyph.appendChild(arrow);
-  glyph.appendChild(value);
+  var prog = document.createElementNS(NS, "circle");
+  prog.setAttribute("cx", String(mid));
+  prog.setAttribute("cy", String(mid));
+  prog.setAttribute("r", String(r));
+  prog.setAttribute("fill", "none");
+  prog.setAttribute("stroke-width", String(sw));
+  prog.setAttribute("stroke-linecap", "round");
+  prog.setAttribute("class", "ring-prog");
+  prog.setAttribute("stroke-dasharray", round1(dash) + " " + round1(c));
+  prog.setAttribute("transform", "rotate(-90 " + mid + " " + mid + ")");
 
-  glyph.setAttribute(
-    "aria-label",
-    dir === "flat"
-      ? metricLabel + " 横ばい 増減なし"
-      : metricLabel + " " + DIR_WORD[kind][dir] + " " + spokenDelta(n, kind)
-  );
-  return glyph;
+  var text = document.createElementNS(NS, "text");
+  text.setAttribute("x", String(mid));
+  text.setAttribute("y", String(mid));
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("dominant-baseline", "central");
+  text.setAttribute("class", "ring-text");
+  text.setAttribute("font-size", String(big ? 30 : 15));
+  text.textContent = (rate == null || isNaN(rate))
+    ? "—"
+    : (Math.round(rate * 10) / 10).toFixed(1);
+
+  svg.appendChild(track);
+  svg.appendChild(prog);
+  svg.appendChild(text);
+  return svg;
 }
 
 /*
- * 増減インジケータ（チップ）を1つ生成して返す。
- *   - 形状アイコン（▲上昇 / ▼下降 / →横ばい）＋色（緑 / 赤 / グレー）＋差分値を表示
- *   - 色だけに依存しないよう、チップ全体に「貯水率 上昇 0.3ポイント」等の aria-label を持たせ、
- *     アイコンは aria-hidden にしてスクリーンリーダーでの重複読みを防ぐ
- * kind: "storage" | "rate" / metricLabel: 画面表示名（"貯水量" / "貯水率"）
+ * 前時点比を 1 系統に集約した表示（貯水率のみ）。
+ *   「前時点比 ▲ +0.2pt」を出す。向きは形状（▲▼→）＋色。
+ *   色に依存しないよう要素全体に aria-label（"前時点比 貯水率 上昇 0.2ポイント" 等）を持たせ、
+ *   アイコンは aria-hidden にしてスクリーンリーダーでの重複読みを防ぐ。
+ *   前時点比データが無ければ「前時点比 —」。
  */
-function makeIndicator(n, kind, metricLabel) {
-  var dir = deltaDirection(n, kind);
-  var chip = document.createElement("span");
-  chip.className = "delta-chip";
-  // 非対話要素だが aria-label を確実に読み上げさせるため role="img" を付ける
-  chip.setAttribute("role", "img");
+function makeDeltaLine(deltaRate) {
+  var el = document.createElement("span");
+  el.className = "delta-line";
+  el.setAttribute("role", "img");
 
+  var lead = document.createElement("span");
+  lead.className = "delta-line-lead";
+  lead.textContent = "前時点比";
+  el.appendChild(lead);
+
+  var dir = deltaDirection(deltaRate, "rate");
   if (!dir) {
-    chip.classList.add("is-flat");
-    chip.textContent = metricLabel + " —";
-    chip.setAttribute("aria-label", metricLabel + " の前時点比データなし");
-    return chip;
+    el.classList.add("is-flat");
+    el.appendChild(document.createTextNode(" —"));
+    el.setAttribute("aria-label", "前時点比 貯水率のデータなし");
+    return el;
   }
-  chip.classList.add("is-" + dir);
-
-  var unit = kind === "rate" ? "pt" : "千m³";
-  var valueText = dir === "flat" ? "±0 " + unit : fmtDelta(n, unit, kind === "rate");
+  el.classList.add("is-" + dir);
 
   var icon = document.createElement("span");
-  icon.className = "delta-arrow";
+  icon.className = "delta-line-icon";
   icon.setAttribute("aria-hidden", "true");
   icon.textContent = DIR_ICON[dir];
 
-  var label = document.createElement("span");
-  label.className = "delta-metric";
-  label.textContent = metricLabel;
+  var val = document.createElement("span");
+  val.className = "delta-line-val";
+  val.textContent = dir === "flat"
+    ? "±0pt"
+    : (deltaRate > 0 ? "+" : "-") + (Math.round(Math.abs(deltaRate) * 10) / 10).toFixed(1) + "pt";
 
-  var value = document.createElement("span");
-  value.className = "delta-value";
-  value.textContent = valueText;
-
-  chip.appendChild(icon);
-  chip.appendChild(label);
-  chip.appendChild(value);
-
-  if (dir === "flat") {
-    chip.setAttribute("aria-label", metricLabel + " 横ばい 増減なし");
-  } else {
-    chip.setAttribute("aria-label", metricLabel + " " + DIR_WORD[kind][dir] + " " + spokenDelta(n, kind));
-  }
-  return chip;
+  el.appendChild(icon);
+  el.appendChild(val);
+  el.setAttribute(
+    "aria-label",
+    dir === "flat"
+      ? "前時点比 貯水率 横ばい 増減なし"
+      : "前時点比 貯水率 " + DIR_WORD.rate[dir] + " " + spokenDelta(deltaRate, "rate")
+  );
+  return el;
 }
 
 // JST の ISO 文字列（+09:00 付き）を "2026-09-06 14:00 (JST)" に
@@ -233,38 +251,130 @@ function buildDeltas(history) {
   return out;
 }
 
-function renderSummary(total, delta) {
+/*
+ * 9ダム内訳のセグメントバー（安全/注意/警戒/危険の本数）を描画する。
+ */
+function renderBreakdown(dams) {
+  var host = document.getElementById("summary-breakdown");
+  if (!host) return;
+  host.innerHTML = "";
+
+  var order = ["is-safe", "is-watch", "is-alert", "is-crit"];
+  var labels = { "is-safe": "安全", "is-watch": "注意", "is-alert": "警戒", "is-crit": "危険" };
+  var counts = { "is-safe": 0, "is-watch": 0, "is-alert": 0, "is-crit": 0, "is-unknown": 0 };
+  (dams || []).forEach(function (d) { counts[rateClass(d.rate)]++; });
+  var denom = (dams || []).length || 1;
+
+  var bar = document.createElement("div");
+  bar.className = "breakdown-bar";
+  bar.setAttribute("role", "img");
+  bar.setAttribute(
+    "aria-label",
+    "9ダム内訳 " + order.map(function (k) { return labels[k] + counts[k]; }).join(" ")
+  );
+  order.forEach(function (k) {
+    if (!counts[k]) return;
+    var seg = document.createElement("span");
+    seg.className = "breakdown-seg " + k;
+    seg.style.width = (counts[k] / denom * 100) + "%";
+    bar.appendChild(seg);
+  });
+
+  var cap = document.createElement("div");
+  cap.className = "breakdown-cap";
+  order.forEach(function (k) {
+    var item = document.createElement("span");
+    item.className = "breakdown-cap-item " + k;
+    var dot = document.createElement("i");
+    dot.className = "breakdown-dot";
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(labels[k] + " " + counts[k]));
+    cap.appendChild(item);
+  });
+
+  host.appendChild(bar);
+  host.appendChild(cap);
+}
+
+/*
+ * 合計貯水率の直近30日スパークライン（SVG・依存追加なし）を描画する。
+ *   history.series の rate.total を末尾から最大 30 日分（720 点）取り、正規化して折れ線に。
+ */
+function renderSparkline(history) {
+  var host = document.getElementById("summary-sparkline");
+  if (!host) return;
+  host.innerHTML = "";
+
+  var series = (history && history.series) || [];
+  var pts = series.slice(-24 * 30)
+    .map(function (s) { return s.rate && s.rate.total != null ? s.rate.total : null; })
+    .filter(function (v) { return v != null; });
+  if (pts.length < 2) { host.hidden = true; return; }
+  host.hidden = false;
+
+  var w = 200, h = 40, pad = 3;
+  var min = Math.min.apply(null, pts);
+  var max = Math.max.apply(null, pts);
+  var span = (max - min) || 1;
+  var coords = pts.map(function (v, i) {
+    var x = pad + (i / (pts.length - 1)) * (w - pad * 2);
+    var y = pad + (1 - (v - min) / span) * (h - pad * 2);
+    return (Math.round(x * 10) / 10) + "," + (Math.round(y * 10) / 10);
+  }).join(" ");
+
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+  svg.setAttribute("width", String(w));
+  svg.setAttribute("height", String(h));
+  svg.setAttribute("class", "sparkline-svg");
+  svg.setAttribute("role", "img");
+  svg.setAttribute(
+    "aria-label",
+    "直近30日の合計貯水率の推移（" + fmtRate(pts[0]) + " → " + fmtRate(pts[pts.length - 1]) + "）"
+  );
+  var poly = document.createElementNS(NS, "polyline");
+  poly.setAttribute("fill", "none");
+  poly.setAttribute("stroke-width", "2");
+  poly.setAttribute("stroke-linecap", "round");
+  poly.setAttribute("stroke-linejoin", "round");
+  poly.setAttribute("class", "sparkline-path");
+  poly.setAttribute("points", coords);
+  svg.appendChild(poly);
+
+  var cap = document.createElement("span");
+  cap.className = "sparkline-cap";
+  cap.setAttribute("aria-hidden", "true");
+  cap.textContent = "直近30日（" + fmtRate(pts[0]) + " → " + fmtRate(pts[pts.length - 1]) + "）";
+
+  host.appendChild(svg);
+  host.appendChild(cap);
+}
+
+function renderSummary(total, delta, dams, history) {
   if (!total) return;
   var card = document.getElementById("summary-card");
 
-  // 大きな貯水率の数字 ＋ その隣に前時点比の方向グリフ（合計サマリ）
-  var rateEl = document.getElementById("summary-rate");
-  rateEl.textContent = "";
-  var rateNum = document.createElement("span");
-  rateNum.className = "summary-rate-num";
-  rateNum.textContent = fmtRate(total.rate);
-  rateEl.appendChild(rateNum);
-  var summaryGlyph = delta ? makeDeltaGlyph(delta.rate, "rate", "貯水率") : null;
-  if (summaryGlyph) rateEl.appendChild(summaryGlyph);
+  var ringHost = document.getElementById("summary-ring");
+  ringHost.innerHTML = "";
+  ringHost.appendChild(makeRing(total.rate, "lg"));
+  var status = document.createElement("span");
+  status.className = "summary-status";
+  status.textContent = rateLabel(total.rate);
+  ringHost.appendChild(status);
 
   document.getElementById("summary-detail").textContent =
     "貯水量 " + fmtInt(total.storage) + " 千m³ ／ 総容量 " + fmtInt(total.capacity) + " 千m³";
 
-  card.classList.remove("is-normal", "is-caution", "is-drought", "is-unknown");
+  card.classList.remove("is-safe", "is-watch", "is-alert", "is-crit", "is-unknown");
   card.classList.add(rateClass(total.rate));
 
   var deltaEl = document.getElementById("summary-delta");
   deltaEl.textContent = "";
-  if (delta && (delta.storage != null || delta.rate != null)) {
-    var lead = document.createElement("span");
-    lead.className = "delta-label";
-    lead.textContent = "前時点比";
-    deltaEl.appendChild(lead);
-    deltaEl.appendChild(makeIndicator(delta.storage, "storage", "貯水量"));
-    deltaEl.appendChild(makeIndicator(delta.rate, "rate", "貯水率"));
-  } else {
-    deltaEl.textContent = "前時点比 データなし";
-  }
+  deltaEl.appendChild(makeDeltaLine(delta ? delta.rate : null));
+
+  renderBreakdown(dams);
+  renderSparkline(history);
 }
 
 function renderDamList(dams, deltas) {
@@ -277,57 +387,48 @@ function renderDamList(dams, deltas) {
   var frag = document.createDocumentFragment();
   DAMS.forEach(function (def) {
     var d = byKey[def.key];
+    var rate = d ? d.rate : null;
+
     var li = document.createElement("li");
     li.dataset.dam = def.key;
-    li.classList.add(d ? rateClass(d.rate) : "is-unknown");
+    li.classList.add(rateClass(rate));
 
+    // ヘッダ: ダム名 ＋ ステータスバッジ
+    var head = document.createElement("div");
+    head.className = "dam-head";
     var name = document.createElement("span");
     name.className = "dam-name";
     name.textContent = def.label;
-
     var badge = document.createElement("span");
     badge.className = "dam-badge";
-    badge.textContent = d ? rateLabel(d.rate) : "—";
-
-    // 大きな貯水率の数字 ＋ その隣に前時点比の方向グリフ（ダム別カード）
-    var rateRow = document.createElement("div");
-    rateRow.className = "dam-rate-row";
-    var rate = document.createElement("span");
-    rate.className = "dam-rate";
-    rate.textContent = d ? fmtRate(d.rate) : "—";
-    rateRow.appendChild(rate);
-    var dd = deltas[def.key];
-    var rateGlyph = d && dd ? makeDeltaGlyph(dd.rate, "rate", "貯水率") : null;
-    if (rateGlyph) rateRow.appendChild(rateGlyph);
-
-    var storage = document.createElement("span");
-    storage.className = "dam-storage";
-    storage.textContent = d
-      ? "貯水量 " + fmtInt(d.storage) + " ／ 容量 " + fmtInt(d.capacity) + " 千m³"
-      : "貯水量 —";
-
-    var delta = document.createElement("span");
-    delta.className = "dam-delta";
-    if (dd && (dd.storage != null || dd.rate != null)) {
-      var lead = document.createElement("span");
-      lead.className = "delta-label";
-      lead.textContent = "前時点比";
-      delta.appendChild(lead);
-      delta.appendChild(makeIndicator(dd.storage, "storage", "貯水量"));
-      delta.appendChild(makeIndicator(dd.rate, "rate", "貯水率"));
-    } else {
-      delta.textContent = "前時点比 —";
-    }
-
-    var head = document.createElement("div");
-    head.className = "dam-head";
+    badge.textContent = d ? rateLabel(rate) : "—";
     head.appendChild(name);
     head.appendChild(badge);
 
+    // 本体: リング（左）＋ 詳細（右）
+    var body = document.createElement("div");
+    body.className = "dam-body";
+
+    var ringWrap = document.createElement("span");
+    ringWrap.className = "dam-ring";
+    ringWrap.appendChild(makeRing(rate, "sm"));
+
+    var meta = document.createElement("div");
+    meta.className = "dam-meta";
+    var dd = deltas[def.key];
+    meta.appendChild(makeDeltaLine(d && dd ? dd.rate : null));
+    var sub = document.createElement("span");
+    sub.className = "dam-sub";
+    sub.textContent = d
+      ? "貯水量 " + fmtInt(d.storage) + " ／ 容量 " + fmtInt(d.capacity) + " 千m³"
+      : "貯水量 —";
+    meta.appendChild(sub);
+
+    body.appendChild(ringWrap);
+    body.appendChild(meta);
+
     li.appendChild(head);
-    li.appendChild(rateRow);
-    li.appendChild(storage);
-    li.appendChild(delta);
+    li.appendChild(body);
     frag.appendChild(li);
   });
   list.appendChild(frag);
@@ -420,7 +521,7 @@ function load(isRefresh) {
     var deltas = buildDeltas(history);
     renderStatus(usedSample ? "sample" : "ok", latest);
     document.getElementById("sample-badge").hidden = !usedSample;
-    renderSummary(latest.total, deltas.total);
+    renderSummary(latest.total, deltas.total, latest.dams, history);
     renderDamList(latest.dams, deltas);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
@@ -455,9 +556,14 @@ function init() {
  * wl-dam-05 — 推移グラフ（Chart.js / CDN 1本）
  * ===================================================================== */
 
-// ダムごとの線色（合計は太めの濃色）。9ダム＋合計。
+// CSS カスタムプロパティを読む（テーマ差し替えに追従させるため描画時に都度取得）
+function cssVar(name, fallback) {
+  var v = getComputedStyle(document.documentElement).getPropertyValue(name);
+  return (v && v.trim()) || fallback;
+}
+
+// ダムごとの線色（合計は描画時に --accent を読む）。9ダム＋合計。
 var SERIES_COLORS = {
-  total: "#0b6e99",
   minamibata: "#e6550d",
   gokayama: "#31a354",
   sefuri: "#756bb1",
@@ -484,6 +590,50 @@ var chartState = {
   chart: null
 };
 
+/*
+ * しきい値ゾーン帯プラグイン（プラグイン“追加”ではなく自前の inline plugin）。
+ *   貯水率表示のときだけ、プロット領域の背景に安全/注意/警戒/危険の帯を敷き、
+ *   平常ライン（60%）を破線で引く。色は CSS 変数を都度読むのでダークモードにも追従。
+ */
+var thresholdZonesPlugin = {
+  id: "thresholdZones",
+  beforeDatasetsDraw: function (chart) {
+    if (chartState.metric !== "rate") return;
+    var y = chart.scales.y;
+    var x = chart.scales.x;
+    if (!y || !x) return;
+    var ctx = chart.ctx;
+    var left = x.left;
+    var width = x.right - x.left;
+
+    var zones = [
+      [RATE_SAFE_MIN, 100, cssVar("--safe-bg", "#e7f5ec")],
+      [RATE_WATCH_MIN, RATE_SAFE_MIN, cssVar("--watch-bg", "#fbf1dc")],
+      [RATE_ALERT_MIN, RATE_WATCH_MIN, cssVar("--alert-bg", "#fbe9db")],
+      [0, RATE_ALERT_MIN, cssVar("--crit-bg", "#f9e3e1")]
+    ];
+
+    ctx.save();
+    zones.forEach(function (z) {
+      var top = y.getPixelForValue(z[1]);
+      var bottom = y.getPixelForValue(z[0]);
+      ctx.fillStyle = z[2];
+      ctx.fillRect(left, top, width, bottom - top);
+    });
+    // 平常ライン 60%
+    var y60 = y.getPixelForValue(60);
+    ctx.strokeStyle = cssVar("--text-muted", "#5c6b7a");
+    ctx.globalAlpha = 0.55;
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(left, y60);
+    ctx.lineTo(left + width, y60);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
 // observedAt(+09:00) を軸ラベルへ。24h は "H時"、それ以上は "M/D"
 function fmtAxisLabel(iso, range) {
   var m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
@@ -501,9 +651,13 @@ function slicedSeries() {
 
 function buildDatasets(rows) {
   var metric = chartState.metric;
+  var accent = cssVar("--accent", "#0b6e99");
+  var surface = cssVar("--surface", "#ffffff");
   return SERIES_KEYS.filter(function (k) { return chartState.visible[k]; })
     .map(function (k) {
-      var color = SERIES_COLORS[k] || "#888";
+      var isTotal = k === "total";
+      var color = isTotal ? accent : (SERIES_COLORS[k] || "#888");
+      var lastIdx = rows.length - 1;
       return {
         label: SERIES_LABELS[k],
         data: rows.map(function (s) {
@@ -511,8 +665,15 @@ function buildDatasets(rows) {
         }),
         borderColor: color,
         backgroundColor: color,
-        borderWidth: k === "total" ? 2.5 : 1.5,
-        pointRadius: rows.length > 48 ? 0 : 2,
+        borderWidth: isTotal ? 2.6 : 1.5,
+        // 末尾に現在値マーカー（合計系列のみ最終点を大きく）
+        pointRadius: rows.map(function (_v, i) {
+          if (isTotal && i === lastIdx) return 5;
+          return rows.length > 48 ? 0 : 2;
+        }),
+        pointBackgroundColor: color,
+        pointBorderColor: surface,
+        pointBorderWidth: isTotal ? 2 : 1,
         pointHoverRadius: 4,
         tension: 0.25,
         spanGaps: true
@@ -529,6 +690,9 @@ function renderChart() {
   var labels = rows.map(function (s) { return fmtAxisLabel(s.observedAt, chartState.range); });
   var datasets = buildDatasets(rows);
   var isRate = chartState.metric === "rate";
+  var gridColor = cssVar("--border", "#dde4ea");
+  var tickColor = cssVar("--text-muted", "#5c6b7a");
+  var textColor = cssVar("--text", "#1b2733");
 
   var data = { labels: labels, datasets: datasets };
   var options = {
@@ -536,7 +700,7 @@ function renderChart() {
     maintainAspectRatio: false,
     interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { display: true, position: "bottom" },
+      legend: { display: true, position: "bottom", labels: { color: textColor } },
       tooltip: {
         callbacks: {
           label: function (ctx) {
@@ -550,6 +714,7 @@ function renderChart() {
     scales: {
       x: {
         ticks: {
+          color: tickColor,
           autoSkip: true,
           maxRotation: 0,
           maxTicksLimit: chartState.range === "24h" ? 12 : 10
@@ -557,10 +722,13 @@ function renderChart() {
         grid: { display: false }
       },
       y: {
+        // 貯水率は 0–100 に固定してしきい値ゾーンと目盛りを安定させる
+        min: isRate ? 0 : undefined,
+        max: isRate ? 100 : undefined,
         beginAtZero: isRate,
-        suggestedMin: isRate ? 0 : undefined,
-        suggestedMax: isRate ? 100 : undefined,
-        title: { display: true, text: isRate ? "貯水率 (%)" : "貯水量 (千m³)" }
+        ticks: { color: tickColor },
+        grid: { color: gridColor },
+        title: { display: true, color: tickColor, text: isRate ? "貯水率 (%)" : "貯水量 (千m³)" }
       }
     }
   };
@@ -575,7 +743,8 @@ function renderChart() {
     chartState.chart = new Chart(canvas.getContext("2d"), {
       type: "line",
       data: data,
-      options: options
+      options: options,
+      plugins: [thresholdZonesPlugin]
     });
   }
 
@@ -632,7 +801,7 @@ function renderSeriesToggle() {
 
     var sw = document.createElement("span");
     sw.className = "series-swatch";
-    sw.style.background = SERIES_COLORS[k] || "#888";
+    sw.style.background = k === "total" ? cssVar("--accent", "#0b6e99") : (SERIES_COLORS[k] || "#888");
 
     var txt = document.createElement("span");
     txt.textContent = SERIES_LABELS[k];
