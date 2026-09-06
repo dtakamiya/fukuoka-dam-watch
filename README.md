@@ -8,11 +8,16 @@
 
 ## 状態
 
-- `wl-dam-01` — サイト雛形（配置済み）
-- `wl-dam-02` — データ取得・正規化スクリプト（`scripts/fetch-dams.mjs`、**実装済み**）
-- `wl-dam-03` — GitHub Actions 毎正時データ更新（`.github/workflows/update-data.yml`、**実装済み**）
-- `wl-dam-04` — フロントの現在値ビュー（9ダム個別カード＋合計サマリ・前時点比・色分け、**実装済み**）
-- `wl-dam-05` — 推移グラフ（Chart.js・24h / 7d / 30d トグル・指標切替・系列 on/off、**実装済み**）
+**MVP 完成。** 現在値ビューと推移グラフが動作し、GitHub Actions が毎正時データを更新する。
+
+| タスク | 内容 | 状態 |
+| --- | --- | --- |
+| `wl-dam-01` | サイト雛形 | ✅ |
+| `wl-dam-02` | データ取得・正規化スクリプト（`scripts/fetch-dams.mjs`） | ✅ |
+| `wl-dam-03` | GitHub Actions 毎正時データ更新（`.github/workflows/update-data.yml`） | ✅ |
+| `wl-dam-04` | 現在値ビュー（9ダム個別カード＋合計サマリ・前時点比・色分け） | ✅ |
+| `wl-dam-05` | 推移グラフ（Chart.js・24h / 7d / 30d トグル・指標切替・系列 on/off） | ✅ |
+| `wl-dam-06` | 仕上げ（出典・ライセンス表記の確定、スクリーンショット整理、最終確認） | ✅ |
 
 フロントの現在値表示・グラフ描画は、実データが無くても `data/*.sample.json` で開発できる。
 
@@ -54,38 +59,24 @@ JS 構文チェックは `node --check assets/app.js`。
 
 ## スクリーンショット
 
-### 現在値ビュー（wl-dam-04）
+### 現在値ビュー
 
-合計サマリと bootstrapping 注記（PC 幅）:
+9ダム合計サマリ＋ダム別カード（貯水率で色分け・前時点比つき）。
 
-![現在値ビュー・上部（PC）](docs/screenshots/current-view-pc-top.png)
+| デスクトップ | 狭幅（スマホ相当） |
+| --- | --- |
+| ![現在値ビュー（PC）](docs/screenshots/current-view-pc.png) | ![現在値ビュー（スマホ相当）](docs/screenshots/current-view-mobile.png) |
 
-9ダム個別カード（貯水率で色分け・前時点比つき、PC 幅）:
+### 推移グラフ
 
-![現在値ビュー・ダム別カード（PC）](docs/screenshots/current-view-pc-cards.png)
+合計貯水率の推移。24時間 / 7日 / 30日トグル・指標（貯水率 / 貯水量）切替・系列 on/off。
 
-スマホ幅（1 カラムに折り返し）:
+| デスクトップ | 狭幅（スマホ相当） |
+| --- | --- |
+| ![推移グラフ（PC）](docs/screenshots/trend-chart-pc.png) | ![推移グラフ（スマホ相当）](docs/screenshots/trend-chart-mobile.png) |
 
-![現在値ビュー・上部（スマホ）](docs/screenshots/current-view-mobile-top.png)
-![現在値ビュー・ダム別カード（スマホ）](docs/screenshots/current-view-mobile-cards.png)
-
-### 推移グラフ（wl-dam-05）
-
-合計貯水率の推移・24時間ビュー（PC 幅）:
-
-![推移グラフ・24時間（PC）](docs/screenshots/trend-chart-pc-24h.png)
-
-貯水量指標・30日ビューでダム個別系列を追加表示（PC 幅）:
-
-![推移グラフ・貯水量・複数系列（PC）](docs/screenshots/trend-chart-pc-storage-multi.png)
-
-狭幅表示（トグルが折り返し、グラフはコンテナに追従）:
-
-![推移グラフ・狭幅](docs/screenshots/trend-chart-narrow.png)
-
-### サイト雛形（wl-dam-01）
-
-![サイト雛形（wl-dam-01）](docs/screenshots/scaffold-site.png)
+> 狭幅ショットは、ブラウザ自動化ツールの制約でビューポート幅を変更できなかったため、
+> コンテナ幅を 390px に絞り `@media (max-width: 540px)` 相当のスタイルを適用して撮影したもの。
 
 ## 使用ライブラリ
 
