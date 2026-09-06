@@ -197,11 +197,30 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
 
 ## 自動更新（GitHub Actions）
 
-`.github/workflows/update-data.yml` が **30分毎**（`schedule: "7,37 * * * *"`, 毎時07分・37分）に
-`scripts/fetch-dams.mjs` を実行し、`data/latest.json` / `data/history.json` を更新する。
+`.github/workflows/update-data.yml` が `scripts/fetch-dams.mjs` を実行し、
+`data/latest.json` / `data/history.json` を更新する。
 
-- **手動実行**: Actions タブ → **update-data** → **Run workflow**（`workflow_dispatch`）。
-  初回運用や Pages 公開直後の初期データ投入はこれで行う。
+### トリガー機構
+
+- **主トリガー: だいすけの Mac 上の launchd**。毎時 **:17 / :47** に `scripts/dispatch-update-data.sh` を
+  実行し、`gh workflow run update-data.yml`（`workflow_dispatch`）でこのワークフローを叩く。
+  GitHub のホスト型 cron は新規ワークフローだと発火開始が半日〜1日遅れ、混雑時にドロップされるため、
+  確実な定期実行はローカルの launchd に持たせている。
+- **冗長: `on.schedule: "7,37 * * * *"`**（毎時07分・37分）。GitHub 側がスケジュール発火するように
+  なったとき用の保険。`concurrency: update-data` で launchd 分と重なっても二重起動しない。
+- **launchd セットアップ**（だいすけの Mac）:
+  ```sh
+  cp scripts/com.dtakamiya.fukuoka-dam-watch-dispatch.plist ~/Library/LaunchAgents/
+  launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.dtakamiya.fukuoka-dam-watch-dispatch.plist
+  launchctl kickstart -k gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch   # 動作確認
+  ```
+  解除は `launchctl bootout gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch`。
+  トークンは `gh` が macOS keyring から取得する（GUI セッション実行なら通る）。keyring に
+  触れない場合は `~/.config/gh-dispatch-token`（0600, `workflow` scope）へフォールバックする。
+  ディスパッチ結果は `tmp/dispatch.log`（末尾500行で自己ローテート、Git 管理外）。
+
+- **手動実行**: Actions タブ → **update-data** → **Run workflow**（`workflow_dispatch`）、または
+  ローカルで `bash scripts/dispatch-update-data.sh`。初回運用や Pages 公開直後の初期データ投入はこれで行う。
 - **差分判定**: 実データ2ファイルは `.gitignore` 対象なので `git add -f` で強制ステージし、
   `git diff --cached --quiet` で判定する。**差分があるときだけ** `github-actions[bot]` 名義で
   コミットして push する。BODIK 未更新の正時はファイルが変化しないためコミットされない。
