@@ -20,8 +20,8 @@ name: update-data
 
 on:
   schedule:
-    # 毎時30分。BODIK 側の正時更新から十分に余裕を持たせる。
-    - cron: "30 * * * *"
+    # 毎時00分・30分（30分毎）。BODIK は毎正時更新なので取りこぼしても次枠で拾える。
+    - cron: "0,30 * * * *"
   workflow_dispatch: {}
 
 # push に必要な最小スコープのみ。
