@@ -11,8 +11,11 @@
  *     「サンプルデータ表示中」バッジを出す
  *   - bootstrapping: true のときは時系列の蓄積状況を注記する
  *
- * 後続タスク:
- *   - wl-dam-05: Chart.js（CDN・1本）で #chart に 24h / 7d / 30d の推移を描画する
+ * wl-dam-05（推移グラフ）の責務:
+ *   - data/history.json の series を Chart.js（CDN・1本）で折れ線描画する
+ *   - 期間トグル 24h / 7d / 30d、指標トグル（貯水率 / 貯水量）、系列 on/off
+ *     （既定は合計のみ）を提供する
+ *   - bootstrapping 中で series が要求期間に満たないときは、ある分だけ描画し注記する
  */
 
 "use strict";
@@ -267,10 +270,212 @@ function init() {
     renderDamList(latest.dams, deltas);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
+    initChart(history);
   }).catch(function (err) {
     renderStatus("error", null);
     if (window.console) console.error("[fukuoka-dam-watch] データ取得に失敗:", err);
   });
+}
+
+/* =====================================================================
+ * wl-dam-05 — 推移グラフ（Chart.js / CDN 1本）
+ * ===================================================================== */
+
+// ダムごとの線色（合計は太めの濃色）。9ダム＋合計。
+var SERIES_COLORS = {
+  total: "#0b6e99",
+  minamibata: "#e6550d",
+  gokayama: "#31a354",
+  sefuri: "#756bb1",
+  magaribuchi: "#e377c2",
+  egawa: "#c23b3b",
+  kubara: "#2b8cbe",
+  hase: "#8c6d31",
+  ino: "#17becf",
+  zuibaiji: "#d4a017"
+};
+
+var SERIES_KEYS = DAMS.map(function (d) { return d.key; }).concat(["total"]);
+var SERIES_LABELS = { total: "9ダム合計" };
+DAMS.forEach(function (d) { SERIES_LABELS[d.key] = d.label; });
+
+// 期間ごとの「末尾から何点使うか」（毎正時＝1点/時）
+var RANGE_POINTS = { "24h": 24, "7d": 24 * 7, "30d": 24 * 30 };
+
+var chartState = {
+  range: "24h",
+  metric: "rate", // "rate" | "storage"
+  visible: { total: true }, // 既定は合計のみ
+  history: null,
+  chart: null
+};
+
+// observedAt(+09:00) を軸ラベルへ。24h は "H時"、それ以上は "M/D"
+function fmtAxisLabel(iso, range) {
+  var m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return String(iso);
+  if (range === "24h") return String(Number(m[4])) + "時";
+  return String(Number(m[2])) + "/" + String(Number(m[3]));
+}
+
+// 現在の range に対応する series の抜粋（データが足りなければある分だけ）
+function slicedSeries() {
+  var all = (chartState.history && chartState.history.series) || [];
+  var want = RANGE_POINTS[chartState.range] || all.length;
+  return all.length > want ? all.slice(all.length - want) : all.slice();
+}
+
+function buildDatasets(rows) {
+  var metric = chartState.metric;
+  return SERIES_KEYS.filter(function (k) { return chartState.visible[k]; })
+    .map(function (k) {
+      var color = SERIES_COLORS[k] || "#888";
+      return {
+        label: SERIES_LABELS[k],
+        data: rows.map(function (s) {
+          return s[metric] && s[metric][k] != null ? s[metric][k] : null;
+        }),
+        borderColor: color,
+        backgroundColor: color,
+        borderWidth: k === "total" ? 2.5 : 1.5,
+        pointRadius: rows.length > 48 ? 0 : 2,
+        pointHoverRadius: 4,
+        tension: 0.25,
+        spanGaps: true
+      };
+    });
+}
+
+function renderChart() {
+  if (typeof Chart === "undefined") {
+    if (window.console) console.error("[fukuoka-dam-watch] Chart.js の読み込みに失敗");
+    return;
+  }
+  var rows = slicedSeries();
+  var labels = rows.map(function (s) { return fmtAxisLabel(s.observedAt, chartState.range); });
+  var datasets = buildDatasets(rows);
+  var isRate = chartState.metric === "rate";
+
+  var data = { labels: labels, datasets: datasets };
+  var options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { display: true, position: "bottom" },
+      tooltip: {
+        callbacks: {
+          label: function (ctx) {
+            var v = ctx.parsed.y;
+            if (v == null) return ctx.dataset.label + ": —";
+            return ctx.dataset.label + ": " + v + (isRate ? " %" : " 千m³");
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          autoSkip: true,
+          maxRotation: 0,
+          maxTicksLimit: chartState.range === "24h" ? 12 : 10
+        },
+        grid: { display: false }
+      },
+      y: {
+        beginAtZero: isRate,
+        suggestedMin: isRate ? 0 : undefined,
+        suggestedMax: isRate ? 100 : undefined,
+        title: { display: true, text: isRate ? "貯水率 (%)" : "貯水量 (千m³)" }
+      }
+    }
+  };
+
+  if (chartState.chart) {
+    chartState.chart.data = data;
+    chartState.chart.options = options;
+    chartState.chart.update();
+  } else {
+    var canvas = document.getElementById("trend-chart");
+    if (!canvas) return;
+    chartState.chart = new Chart(canvas.getContext("2d"), {
+      type: "line",
+      data: data,
+      options: options
+    });
+  }
+
+  // bootstrapping 中でデータが要求期間に満たない場合の注記
+  var note = document.getElementById("chart-note");
+  var all = (chartState.history && chartState.history.series) || [];
+  var want = RANGE_POINTS[chartState.range] || all.length;
+  if (all.length < want) {
+    var haveH = all.length;
+    note.textContent =
+      "この期間はまだデータが不足しています（保有 " + haveH + " 時間分＝約 " +
+      (Math.round(haveH / 24 * 10) / 10) + " 日）。取得済みの範囲だけを表示しています。";
+    note.hidden = false;
+  } else {
+    note.hidden = true;
+  }
+}
+
+function wireToggle(containerId, attr, apply) {
+  var box = document.getElementById(containerId);
+  if (!box) return;
+  box.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[" + attr + "]");
+    if (!btn) return;
+    var buttons = box.querySelectorAll("button[" + attr + "]");
+    buttons.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+    apply(btn.getAttribute(attr));
+    renderChart();
+  });
+}
+
+function renderSeriesToggle() {
+  var box = document.getElementById("series-toggle");
+  if (!box) return;
+  var legend = box.querySelector("legend");
+  box.innerHTML = "";
+  if (legend) box.appendChild(legend);
+
+  SERIES_KEYS.forEach(function (k) {
+    var id = "series-" + k;
+    var label = document.createElement("label");
+    label.className = "series-option";
+    label.htmlFor = id;
+
+    var cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.id = id;
+    cb.checked = !!chartState.visible[k];
+    cb.addEventListener("change", function () {
+      if (cb.checked) chartState.visible[k] = true;
+      else delete chartState.visible[k];
+      renderChart();
+    });
+
+    var sw = document.createElement("span");
+    sw.className = "series-swatch";
+    sw.style.background = SERIES_COLORS[k] || "#888";
+
+    var txt = document.createElement("span");
+    txt.textContent = SERIES_LABELS[k];
+
+    label.appendChild(cb);
+    label.appendChild(sw);
+    label.appendChild(txt);
+    box.appendChild(label);
+  });
+}
+
+function initChart(history) {
+  chartState.history = history;
+  renderSeriesToggle();
+  wireToggle("range-toggle", "data-range", function (v) { chartState.range = v; });
+  wireToggle("metric-toggle", "data-metric", function (v) { chartState.metric = v; });
+  renderChart();
 }
 
 document.addEventListener("DOMContentLoaded", init);

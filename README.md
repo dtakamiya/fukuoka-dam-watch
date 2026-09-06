@@ -12,7 +12,7 @@
 - `wl-dam-02` — データ取得・正規化スクリプト（`scripts/fetch-dams.mjs`、**実装済み**）
 - `wl-dam-03` — GitHub Actions 毎正時データ更新（`.github/workflows/update-data.yml`、**実装済み**）
 - `wl-dam-04` — フロントの現在値ビュー（9ダム個別カード＋合計サマリ・前時点比・色分け、**実装済み**）
-- `wl-dam-05` 以降 — 推移グラフ（24h / 7d / 30d、未実装、`org/weekend-lab/backlog.json` を参照）
+- `wl-dam-05` — 推移グラフ（Chart.js・24h / 7d / 30d トグル・指標切替・系列 on/off、**実装済み**）
 
 フロントの現在値表示・グラフ描画は、実データが無くても `data/*.sample.json` で開発できる。
 
@@ -40,6 +40,8 @@ python3 -m http.server 8000
 9ダム個別カード（貯水率・貯水量・前時点比・平常/注意/渇水の色分け）／観測時刻と取得元の表示／
 フッタの出典表記（福岡市オープンデータ / BODIK）。実データが読めない場合は
 `data/*.sample.json` にフォールバックし「サンプルデータ表示中」バッジが出ること。
+推移グラフが描画され、24時間 / 7日 / 30日トグル・指標（貯水率 / 貯水量）切替・
+系列 on/off（既定は合計のみ）が動くこと。
 JS 構文チェックは `node --check assets/app.js`。
 
 ### ローカル開発時のデータ
@@ -67,14 +69,28 @@ JS 構文チェックは `node --check assets/app.js`。
 ![現在値ビュー・上部（スマホ）](docs/screenshots/current-view-mobile-top.png)
 ![現在値ビュー・ダム別カード（スマホ）](docs/screenshots/current-view-mobile-cards.png)
 
+### 推移グラフ（wl-dam-05）
+
+合計貯水率の推移・24時間ビュー（PC 幅）:
+
+![推移グラフ・24時間（PC）](docs/screenshots/trend-chart-pc-24h.png)
+
+貯水量指標・30日ビューでダム個別系列を追加表示（PC 幅）:
+
+![推移グラフ・貯水量・複数系列（PC）](docs/screenshots/trend-chart-pc-storage-multi.png)
+
+狭幅表示（トグルが折り返し、グラフはコンテナに追従）:
+
+![推移グラフ・狭幅](docs/screenshots/trend-chart-narrow.png)
+
 ### サイト雛形（wl-dam-01）
 
 ![サイト雛形（wl-dam-01）](docs/screenshots/scaffold-site.png)
 
 ## 使用ライブラリ
 
-- 推移グラフは **Chart.js**（CDN 参照・バンドラなし）を採用予定。ライブラリは1つに限定する。
-  `wl-dam-03` で `assets/app.js` に実装する。
+- 推移グラフは **Chart.js**（`cdn.jsdelivr.net` から CDN 参照・バンドラなし）。
+  外部依存はこの1つに限定する。`assets/app.js` の wl-dam-05 セクションで実装。
 
 ## データソース
 

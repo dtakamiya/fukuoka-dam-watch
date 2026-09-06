@@ -285,15 +285,102 @@ body {
 .swatch.is-caution { background: var(--caution); }
 .swatch.is-drought { background: var(--drought); }
 
-/* ---- グラフ（wl-dam-05 で実装） ---- */
-.chart-placeholder {
-  background: var(--surface);
-  border: 1px dashed var(--border);
+/* ---- グラフ（wl-dam-05） ---- */
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  margin-top: 0.9rem;
+}
+
+.range-toggle,
+.metric-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 2.5rem 1rem;
-  text-align: center;
+  overflow: hidden;
+}
+
+.range-toggle button,
+.metric-toggle button {
+  appearance: none;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.range-toggle button:first-child,
+.metric-toggle button:first-child {
+  border-left: 0;
+}
+
+.range-toggle button.is-active,
+.metric-toggle button.is-active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.chart-box {
+  position: relative;
+  margin-top: 0.9rem;
+  height: 340px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.4rem 0.2rem;
+}
+
+/* Chart.js の canvas はコンテナに追従させる（<canvas> は img リセット対象外なので明示） */
+.chart-box canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.series-toggle {
+  margin: 1rem 0 0;
+  padding: 0.7rem 0.9rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+
+.series-toggle legend {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  font-size: 0.92rem;
+  padding: 0 0.3rem;
+}
+
+.series-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.series-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.chart-note {
+  margin: 0.7rem 0 0;
+  padding: 0.5rem 0.8rem;
+  background: #eef3f7;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
 .updated-line {
@@ -322,4 +409,8 @@ body {
   .summary-rate { font-size: 2.4rem; }
   .dam-list { grid-template-columns: 1fr; }
   .site-main { padding: 1.2rem 0.9rem 2rem; }
+  .chart-box { height: 280px; }
+  .chart-controls { gap: 0.5rem 0.8rem; }
+  .range-toggle button,
+  .metric-toggle button { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
 }
