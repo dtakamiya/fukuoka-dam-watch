@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-09-06T05:47:21.804Z",
+  "observedAt": "2026-09-06T14:00:00+09:00",
+  "unit": "千m3",
+  "bootstrapping": true,
+  "source": {
+    "name": "福岡市オープンデータ / BODIK 福岡市関連9ダム貯水量",
+    "dataset": "https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1",
+    "attribution": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+  },
+  "dams": [
+    {
+      "key": "minamibata",
+      "name": "南畑ダム",
+      "storage": 2597,
+      "capacity": 3650,
+      "rate": 71.2
+    },
+    {
+      "key": "gokayama",
+      "name": "五ケ山ダム",
+      "storage": 16501,
+      "capacity": 31700,
+      "rate": 52.1
+    },
+    {
+      "key": "sefuri",
+      "name": "脊振ダム",
+      "storage": 3543,
+      "capacity": 3979,
+      "rate": 89
+    },
+    {
+      "key": "magaribuchi",
+      "name": "曲渕ダム",
+      "storage": 2035,
+      "capacity": 2368,
+      "rate": 85.9
+    },
+    {
+      "key": "egawa",
+      "name": "江川ダム",
+      "storage": 6720,
+      "capacity": 24000,
+      "rate": 28
+    },
+    {
+      "key": "kubara",
+      "name": "久原ダム",
+      "storage": 1180,
+      "capacity": 1460,
+      "rate": 80.8
+    },
+    {
+      "key": "hase",
+      "name": "長谷ダム",
+      "storage": 3575,
+      "capacity": 4850,
+      "rate": 73.7
+    },
+    {
+      "key": "ino",
+      "name": "猪野ダム",
+      "storage": 2553,
+      "capacity": 3650,
+      "rate": 69.9
+    },
+    {
+      "key": "zuibaiji",
+      "name": "瑞梅寺ダム",
+      "storage": 564,
+      "capacity": 1220,
+      "rate": 46.2
+    }
+  ],
+  "total": {
+    "key": "total",
+    "name": "9ダム合計",
+    "storage": 39268,
+    "capacity": 76877,
+    "rate": 51.1
+  }
+}
