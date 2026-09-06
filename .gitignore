@@ -6,3 +6,8 @@ node_modules/
 tmp/
 dist/
 data/*.tmp
+
+# 実データは wl-dam-03 の GitHub Actions が毎正時に生成・コミットする。
+# ローカル実行分はコミットしない（*.sample.json のみバージョン管理する）。
+data/latest.json
+data/history.json

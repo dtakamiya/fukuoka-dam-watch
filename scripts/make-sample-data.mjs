@@ -32,7 +32,7 @@ const DAMS = [
 const TOTAL = { key: "total", name: "9ダム合計" };
 const TOTAL_CAP = DAMS.reduce((n, d) => n + d.capacity, 0); // 76877
 
-const HOURS = 35 * 24; // 35 日分・毎正時
+const HOURS = 30 * 24; // 30 日分・毎正時（30d グラフの動作確認に必要な期間）
 const rate = (s, c) => Math.round((s / c) * 1000) / 10;
 
 // 決定論的な擬似乱数（seed 固定で再現可能）
@@ -82,7 +82,7 @@ const historySample = {
   retainDays: 40,
   bootstrapping: false,
   spanDays: Math.round(((HOURS - 1) / 24) * 10) / 10,
-  _note: "SAMPLE / DUMMY DATA — フロント開発用の合成値。実データではない。",
+  _note: "SAMPLE / DUMMY DATA (30日・minify) — フロント開発用の合成値。実データではない。",
   dams: [...DAMS.map((d) => ({ key: d.key, name: d.name })), { key: TOTAL.key, name: TOTAL.name }],
   capacities,
   series,
@@ -117,7 +117,8 @@ const latestSample = {
 };
 
 await mkdir(DATA_DIR, { recursive: true });
-await writeFile(join(DATA_DIR, "history.sample.json"), JSON.stringify(historySample, null, 2) + "\n");
+// history はサイズ削減のため minify（インデント無し）。latest は小さいので pretty のまま。
+await writeFile(join(DATA_DIR, "history.sample.json"), JSON.stringify(historySample) + "\n");
 await writeFile(join(DATA_DIR, "latest.sample.json"), JSON.stringify(latestSample, null, 2) + "\n");
 process.stderr.write(
   `[make-sample-data] history.sample.json (${series.length} 点 / ${historySample.spanDays} 日), latest.sample.json 生成\n`,

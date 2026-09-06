@@ -38,6 +38,14 @@ python3 -m http.server 8000
 「データ未取得」バナー／フッタの出典表記（福岡市オープンデータ / BODIK）が表示されること。
 JS 構文チェックは `node --check assets/app.js`。
 
+### ローカル開発時のデータ
+
+`data/latest.json` / `data/history.json`（実データ）は Git 管理外で、GitHub Actions
+（`.github/workflows/update-data.yml`）が毎正時に生成・コミットする。ローカルや初回 Action 実行前は
+これらが存在しないため、フロント（wl-dam-04 以降）は **実データの取得に失敗したら
+`data/*.sample.json`（30 日分の合成ダミー・リポジトリにコミット済み）にフォールバック** する。
+実データを手元で作りたい場合は `node scripts/fetch-dams.mjs` を実行する。
+
 ## スクリーンショット
 
 ![サイト雛形（wl-dam-01）](docs/screenshots/scaffold-site.png)
@@ -98,9 +106,10 @@ JS 構文チェックは `node --check assets/app.js`。
 
 ## JSON スキーマ
 
-`scripts/fetch-dams.mjs` が `data/` に2ファイルを生成する。フロント開発用に同スキーマの
-ダミーデータ `data/latest.sample.json` / `data/history.sample.json`（合成値・35日分）を
-コミットしてある（`_note` フィールドでサンプルと明示）。
+`scripts/fetch-dams.mjs` が `data/` に2ファイルを生成する（Git 管理外・Actions が生成）。
+フロント開発用に同スキーマのダミーデータ `data/latest.sample.json`（pretty）/
+`data/history.sample.json`（30 日分・サイズ削減のため minify）をコミットしてある
+（`_note` フィールドでサンプルと明示）。
 
 ### `data/latest.json` — 最新1時点
 
