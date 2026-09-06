@@ -105,6 +105,54 @@ var DIR_WORD = {
   rate: { up: "上昇", down: "下降", flat: "横ばい" }
 };
 
+// aria-label 用の読み上げ文言（"0.3ポイント" / "1,234千立方メートル"）
+function spokenDelta(n, kind) {
+  return kind === "rate"
+    ? (Math.round(Math.abs(n) * 10) / 10).toFixed(1) + "ポイント"
+    : fmtInt(Math.abs(n)) + "千立方メートル";
+}
+
+/*
+ * 目立つ方向グリフを1つ生成して返す（大きな数字の隣に置く用）。
+ *   - 形状アイコン（▲上昇 / ▼下降 / →横ばい）＋色（緑 / 赤 / グレー）＋差分の絶対値を表示
+ *   - しきい値・色・文言は deltaDirection / DIR_ICON / DIR_WORD / spokenDelta を流用（重複実装しない）
+ *   - 前時点比データが無ければ null を返す（詳細チップ行が "—" を出すのでグリフは省略）
+ */
+function makeDeltaGlyph(n, kind, metricLabel) {
+  var dir = deltaDirection(n, kind);
+  if (!dir) return null;
+
+  var glyph = document.createElement("span");
+  glyph.className = "delta-glyph is-" + dir;
+  glyph.setAttribute("role", "img");
+
+  var arrow = document.createElement("span");
+  arrow.className = "delta-glyph-arrow";
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = DIR_ICON[dir];
+
+  var value = document.createElement("span");
+  value.className = "delta-glyph-value";
+  value.setAttribute("aria-hidden", "true");
+  var unit = kind === "rate" ? "pt" : "千m³";
+  value.textContent = dir === "flat"
+    ? "±0" + unit
+    : (kind === "rate"
+        ? (Math.round(Math.abs(n) * 10) / 10).toFixed(1) + unit
+        : fmtInt(Math.abs(n)) + unit);
+
+  glyph.appendChild(arrow);
+  glyph.appendChild(value);
+
+  glyph.setAttribute(
+    "aria-label",
+    dir === "flat"
+      ? metricLabel + " 横ばい 増減なし"
+      : metricLabel + " " + DIR_WORD[kind][dir] + " " + spokenDelta(n, kind)
+  );
+  return glyph;
+}
+
 /*
  * 増減インジケータ（チップ）を1つ生成して返す。
  *   - 形状アイコン（▲上昇 / ▼下降 / →横ばい）＋色（緑 / 赤 / グレー）＋差分値を表示
@@ -150,10 +198,7 @@ function makeIndicator(n, kind, metricLabel) {
   if (dir === "flat") {
     chip.setAttribute("aria-label", metricLabel + " 横ばい 増減なし");
   } else {
-    var spoken = kind === "rate"
-      ? (Math.round(Math.abs(n) * 10) / 10).toFixed(1) + "ポイント"
-      : fmtInt(Math.abs(n)) + "千立方メートル";
-    chip.setAttribute("aria-label", metricLabel + " " + DIR_WORD[kind][dir] + " " + spoken);
+    chip.setAttribute("aria-label", metricLabel + " " + DIR_WORD[kind][dir] + " " + spokenDelta(n, kind));
   }
   return chip;
 }
@@ -191,7 +236,17 @@ function buildDeltas(history) {
 function renderSummary(total, delta) {
   if (!total) return;
   var card = document.getElementById("summary-card");
-  document.getElementById("summary-rate").textContent = fmtRate(total.rate);
+
+  // 大きな貯水率の数字 ＋ その隣に前時点比の方向グリフ（合計サマリ）
+  var rateEl = document.getElementById("summary-rate");
+  rateEl.textContent = "";
+  var rateNum = document.createElement("span");
+  rateNum.className = "summary-rate-num";
+  rateNum.textContent = fmtRate(total.rate);
+  rateEl.appendChild(rateNum);
+  var summaryGlyph = delta ? makeDeltaGlyph(delta.rate, "rate", "貯水率") : null;
+  if (summaryGlyph) rateEl.appendChild(summaryGlyph);
+
   document.getElementById("summary-detail").textContent =
     "貯水量 " + fmtInt(total.storage) + " 千m³ ／ 総容量 " + fmtInt(total.capacity) + " 千m³";
 
@@ -234,9 +289,16 @@ function renderDamList(dams, deltas) {
     badge.className = "dam-badge";
     badge.textContent = d ? rateLabel(d.rate) : "—";
 
+    // 大きな貯水率の数字 ＋ その隣に前時点比の方向グリフ（ダム別カード）
+    var rateRow = document.createElement("div");
+    rateRow.className = "dam-rate-row";
     var rate = document.createElement("span");
     rate.className = "dam-rate";
     rate.textContent = d ? fmtRate(d.rate) : "—";
+    rateRow.appendChild(rate);
+    var dd = deltas[def.key];
+    var rateGlyph = d && dd ? makeDeltaGlyph(dd.rate, "rate", "貯水率") : null;
+    if (rateGlyph) rateRow.appendChild(rateGlyph);
 
     var storage = document.createElement("span");
     storage.className = "dam-storage";
@@ -246,7 +308,6 @@ function renderDamList(dams, deltas) {
 
     var delta = document.createElement("span");
     delta.className = "dam-delta";
-    var dd = deltas[def.key];
     if (dd && (dd.storage != null || dd.rate != null)) {
       var lead = document.createElement("span");
       lead.className = "delta-label";
@@ -264,7 +325,7 @@ function renderDamList(dams, deltas) {
     head.appendChild(badge);
 
     li.appendChild(head);
-    li.appendChild(rate);
+    li.appendChild(rateRow);
     li.appendChild(storage);
     li.appendChild(delta);
     frag.appendChild(li);

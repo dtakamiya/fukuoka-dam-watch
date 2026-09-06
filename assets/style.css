@@ -152,11 +152,20 @@ body {
   font-size: 3rem;
   font-weight: 800;
   line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.5rem;
 }
 
-.summary-card.is-normal .summary-rate { color: var(--normal); }
-.summary-card.is-caution .summary-rate { color: var(--caution); }
-.summary-card.is-drought .summary-rate { color: var(--drought); }
+.summary-card.is-normal .summary-rate-num { color: var(--normal); }
+.summary-card.is-caution .summary-rate-num { color: var(--caution); }
+.summary-card.is-drought .summary-rate-num { color: var(--drought); }
+
+/* 合計サマリの方向グリフは数字に負けない大きさで */
+.summary-rate .delta-glyph { font-size: 1.5rem; }
+.summary-rate .delta-glyph .delta-glyph-value { font-size: 1rem; }
 
 .summary-detail {
   margin: 0.2rem 0 0;
@@ -235,9 +244,16 @@ body {
 .is-caution .dam-badge { background: var(--caution-bg); color: var(--caution); }
 .is-drought .dam-badge { background: var(--drought-bg); color: var(--drought); }
 
-.dam-rate {
-  display: block;
+/* 大きな貯水率の数字 ＋ 前時点比の方向グリフを1行に */
+.dam-rate-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.4rem;
   margin-top: 0.3rem;
+}
+
+.dam-rate {
   font-size: 1.7rem;
   font-weight: 800;
 }
@@ -246,6 +262,29 @@ body {
 .is-caution .dam-rate { color: var(--caution); }
 .is-drought .dam-rate { color: var(--drought); }
 .is-unknown .dam-rate { color: var(--unknown); }
+
+/* 方向グリフ: 形状（▲▼→）＋色＋差分の絶対値。色帯（ステータス）とは独立 */
+.delta-glyph {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.12rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.delta-glyph .delta-glyph-arrow { font-size: 1em; }
+.delta-glyph .delta-glyph-value {
+  font-size: 0.62em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dam-rate-row .delta-glyph { font-size: 1.15rem; }
+
+.delta-glyph.is-up { color: var(--normal); }
+.delta-glyph.is-down { color: var(--drought); }
+.delta-glyph.is-flat { color: var(--unknown); }
 
 .dam-storage {
   display: block;
@@ -452,6 +491,8 @@ body {
 
 @media (max-width: 540px) {
   .summary-rate { font-size: 2.4rem; }
+  .summary-rate .delta-glyph { font-size: 1.25rem; }
+  .dam-rate-row .delta-glyph { font-size: 1.05rem; }
   .dam-list { grid-template-columns: 1fr; }
   .site-main { padding: 1.2rem 0.9rem 2rem; }
   .chart-box { height: 280px; }
