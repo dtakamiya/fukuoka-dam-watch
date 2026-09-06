@@ -303,7 +303,7 @@ DAMS.forEach(function (d) { SERIES_LABELS[d.key] = d.label; });
 var RANGE_POINTS = { "24h": 24, "7d": 24 * 7, "30d": 24 * 30 };
 
 var chartState = {
-  range: "24h",
+  range: "30d",
   metric: "rate", // "rate" | "storage"
   visible: { total: true }, // 既定は合計のみ
   history: null,
