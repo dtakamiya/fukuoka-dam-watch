@@ -46,9 +46,29 @@
 
     <section class="chart-section" aria-labelledby="chart-heading">
       <h2 id="chart-heading">推移グラフ</h2>
-      <div class="chart-placeholder" id="chart">
-        グラフは後続タスク（wl-dam-05）で実装します。
+
+      <div class="chart-controls">
+        <div class="range-toggle" id="range-toggle" role="group" aria-label="表示期間">
+          <button type="button" data-range="24h" class="is-active">24時間</button>
+          <button type="button" data-range="7d">7日</button>
+          <button type="button" data-range="30d">30日</button>
+        </div>
+        <div class="metric-toggle" id="metric-toggle" role="group" aria-label="表示指標">
+          <button type="button" data-metric="rate" class="is-active">貯水率 (%)</button>
+          <button type="button" data-metric="storage">貯水量 (千m³)</button>
+        </div>
       </div>
+
+      <div class="chart-box">
+        <canvas id="trend-chart" aria-label="ダム貯水の推移グラフ" role="img"></canvas>
+      </div>
+
+      <fieldset class="series-toggle" id="series-toggle">
+        <legend>系列の表示（既定は合計のみ）</legend>
+        <!-- assets/app.js が描画 -->
+      </fieldset>
+
+      <p class="chart-note" id="chart-note" hidden></p>
     </section>
 
     <p class="updated-line" id="updated-line"></p>
@@ -63,6 +83,8 @@
     <p>ダムデータは福岡市オープンデータの利用条件に従います。コードは MIT ライセンス。</p>
   </footer>
 
+  <!-- Chart.js（CDN・1本のみ / バンドラなし） -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>
