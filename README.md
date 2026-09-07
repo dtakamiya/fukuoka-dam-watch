@@ -241,6 +241,22 @@ GitHub Actions ワークフロー `.github/workflows/update-data.yml` が実行�
   監視しており、`update-data` の run が直近 3 時間 1 件も無い（= launchd 停止）場合も
   異常として検知し、自己修復ディスパッチ＋ Slack 通知する。
 
+### launchd のセットアップ（だいすけの Mac）
+
+plist テンプレート `scripts/com.dtakamiya.fukuoka-dam-watch-dispatch.plist` を
+リポジトリ管理下に置いてある（消失事故を防ぐため、スクリプトと同様に追跡ファイル化）。
+実体は `~/Library/LaunchAgents/` に配置する。パスは dtakamiya 環境の絶対パス固定。
+
+```sh
+cp scripts/com.dtakamiya.fukuoka-dam-watch-dispatch.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.dtakamiya.fukuoka-dam-watch-dispatch.plist
+launchctl kickstart -k gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch   # 手動発火して確認
+```
+
+解除は `launchctl bootout gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch`。
+plist を更新したら `bootout` → `bootstrap` で入れ直す。
+標準出力・標準エラーは `tmp/launchd.out` / `tmp/launchd.err`（いずれも Git 管理外）。
+
 ### 画面への反映（クライアント側の自動更新）
 
 ページは初回表示に加え、**10分ごと**および**タブがバックグラウンドから復帰したとき**

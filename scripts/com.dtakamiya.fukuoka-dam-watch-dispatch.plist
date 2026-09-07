@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  テンプレート。実体は ~/Library/LaunchAgents/com.dtakamiya.fukuoka-dam-watch-dispatch.plist に配置する。
+
+  セットアップ:
+    cp scripts/com.dtakamiya.fukuoka-dam-watch-dispatch.plist ~/Library/LaunchAgents/
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.dtakamiya.fukuoka-dam-watch-dispatch.plist
+    launchctl kickstart -k gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch   # 手動発火して確認
+
+  解除:
+    launchctl bootout gui/$(id -u)/com.dtakamiya.fukuoka-dam-watch-dispatch
+
+  毎時 :17 と :47 に scripts/dispatch-update-data.sh を実行して workflow_dispatch を叩く。
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dtakamiya.fukuoka-dam-watch-dispatch</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/dtakamiya/work/fukuoka-dam-watch/scripts/dispatch-update-data.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Minute</key>
+            <integer>17</integer>
+        </dict>
+        <dict>
+            <key>Minute</key>
+            <integer>47</integer>
+        </dict>
+    </array>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/dtakamiya/work/fukuoka-dam-watch/tmp/launchd.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/dtakamiya/work/fukuoka-dam-watch/tmp/launchd.err</string>
+</dict>
+</plist>
