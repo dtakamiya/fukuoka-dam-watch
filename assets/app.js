@@ -5,8 +5,9 @@
  *   - data/latest.json を fetch し、9ダム個別カード＋合計サマリを描画する
  *   - 貯水率は SVG 円形リングゲージ（充填量＝貯水率・中央に数値）で可視化する（依存追加なし）
  *   - 合計サマリは「リング＋内訳セグメントバー（安全/注意/警戒/危険の本数）＋直近30日スパークライン」
- *   - 前時点比は貯水率のみ 1 系統に集約し、数値の下に「▲+0.2pt」相当を出す
- *     （前時点は latest.json 単体には無いため data/history.json の series 末尾2点の差分から算出）
+ *   - 前日同時間比は貯水率のみ 1 系統に集約し、数値の下に「▲+0.2pt」相当を出す
+ *     （前日同時刻の値は latest.json 単体には無いため data/history.json の series から
+ *      「最新観測時刻の24時間前（±90分で最寄り）」の点を引いて差分を算出）
  *   - 最終更新の表示は latest.observedAt（毎正時の観測時刻）を使う。
  *   - 実データ取得に失敗したら data/*.sample.json にフォールバックし、
  *     「サンプルデータ表示中」バッジを出す
@@ -174,11 +175,11 @@ function makeRing(rate, size) {
 }
 
 /*
- * 前時点比を 1 系統に集約した表示（貯水率のみ）。
- *   「前時点比 ▲ +0.2pt」を出す。向きは形状（▲▼→）＋色。
- *   色に依存しないよう要素全体に aria-label（"前時点比 貯水率 上昇 0.2ポイント" 等）を持たせ、
+ * 前日同時間比を 1 系統に集約した表示（貯水率のみ）。
+ *   「前日同時間比 ▲ +0.2pt」を出す。向きは形状（▲▼→）＋色。
+ *   色に依存しないよう要素全体に aria-label（"前日同時間比 貯水率 上昇 0.2ポイント" 等）を持たせ、
  *   アイコンは aria-hidden にしてスクリーンリーダーでの重複読みを防ぐ。
- *   前時点比データが無ければ「前時点比 —」。
+ *   前日同時間比データが無ければ「前日同時間比 —」。
  */
 function makeDeltaLine(deltaRate) {
   var el = document.createElement("span");
@@ -187,14 +188,14 @@ function makeDeltaLine(deltaRate) {
 
   var lead = document.createElement("span");
   lead.className = "delta-line-lead";
-  lead.textContent = "前時点比";
+  lead.textContent = "前日同時間比";
   el.appendChild(lead);
 
   var dir = deltaDirection(deltaRate, "rate");
   if (!dir) {
     el.classList.add("is-flat");
     el.appendChild(document.createTextNode(" —"));
-    el.setAttribute("aria-label", "前時点比 貯水率のデータなし");
+    el.setAttribute("aria-label", "前日同時間比 貯水率のデータなし");
     return el;
   }
   el.classList.add("is-" + dir);
@@ -215,8 +216,8 @@ function makeDeltaLine(deltaRate) {
   el.setAttribute(
     "aria-label",
     dir === "flat"
-      ? "前時点比 貯水率 横ばい 増減なし"
-      : "前時点比 貯水率 " + DIR_WORD.rate[dir] + " " + spokenDelta(deltaRate, "rate")
+      ? "前日同時間比 貯水率 横ばい 増減なし"
+      : "前日同時間比 貯水率 " + DIR_WORD.rate[dir] + " " + spokenDelta(deltaRate, "rate")
   );
   return el;
 }
@@ -229,14 +230,32 @@ function fmtObservedAt(iso) {
   return m[1] + "-" + m[2] + "-" + m[3] + " " + m[4] + ":" + m[5] + " (JST)";
 }
 
-// history.series の末尾2点から key ごとの前時点比を作る
+// history.series の「最新」と「前日の同時刻」を突き合わせて key ごとの差分（前日同時間比）を作る。
+// 前日同時刻ちょうどの観測点が無ければ ±90 分以内で最も近い点を代用し、
+// それも無ければ差分なし（"—" 表示）とする。
 function buildDeltas(history) {
   var out = {};
   if (!history || !Array.isArray(history.series) || history.series.length < 2) {
     return out;
   }
-  var prev = history.series[history.series.length - 2];
-  var last = history.series[history.series.length - 1];
+  var series = history.series;
+  var last = series[series.length - 1];
+  var lastMs = Date.parse(last.observedAt);
+  var prev = null;
+  if (!isNaN(lastMs)) {
+    var targetMs = lastMs - 24 * 60 * 60 * 1000; // 前日の同時刻
+    var tolMs = 90 * 60 * 1000;                  // 代用を許容する時間差
+    var bestGap = Infinity;
+    for (var i = series.length - 2; i >= 0; i--) {
+      var t = Date.parse(series[i].observedAt);
+      if (isNaN(t)) continue;
+      var gap = Math.abs(t - targetMs);
+      if (gap < bestGap) { bestGap = gap; prev = series[i]; }
+      if (t <= targetMs - tolMs) break; // これ以上さかのぼっても近づかない
+    }
+    if (bestGap > tolMs) prev = null;
+  }
+  if (!prev) return out;
   function diff(bucket, k) {
     if (!last[bucket] || !prev[bucket]) return null;
     var a = last[bucket][k];
