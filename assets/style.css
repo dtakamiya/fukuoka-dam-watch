@@ -258,7 +258,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* ---- 前時点比（1系統に集約・貯水率のみ） ---- */
+/* ---- 前日同時間比（1系統に集約・貯水率のみ） ---- */
 .delta-line {
   display: inline-flex;
   align-items: center;
