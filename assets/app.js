@@ -476,15 +476,24 @@ function renderUpdatedLine(latest, usedSample) {
     (usedSample ? "（サンプル）" : "");
 }
 
+/*
+ * URL にキャッシュバスターを付ける。
+ *   iOS Safari など { cache: "no-store" } を無視・非対応の環境でも、毎回異なる URL に
+ *   することで確実に最新の JSON を引く（GitHub Pages はアセットに強めの max-age を付ける）。
+ */
+function withCacheBuster(path) {
+  return path + (path.indexOf("?") === -1 ? "?" : "&") + "t=" + Date.now();
+}
+
 // 実データ → 失敗時 sample の順で JSON を取得
 function loadJson(realPath, samplePath) {
-  return fetch(realPath, { cache: "no-store" })
+  return fetch(withCacheBuster(realPath), { cache: "no-store" })
     .then(function (res) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json().then(function (data) { return { data: data, sample: false }; });
     })
     .catch(function () {
-      return fetch(samplePath, { cache: "no-store" })
+      return fetch(withCacheBuster(samplePath), { cache: "no-store" })
         .then(function (res) {
           if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json().then(function (data) { return { data: data, sample: true }; });

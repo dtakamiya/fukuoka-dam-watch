@@ -282,6 +282,19 @@ plist を更新したら `bootout` → `bootstrap` で入れ直す。
 
 週末ラボ（`~/.ryoko/org/weekend-lab/`）のプロダクト。土日の2枠で少しずつ進める。
 
+### フロント資産のキャッシュバスター（必読）
+
+`index.html` は `assets/app.js` / `assets/style.css` を **`?v=YYYYMMDD` 付き**で参照している。
+GitHub Pages はアセットに強めの `max-age` を付けるため、`index.html` だけ先に更新されて
+JS/CSS が旧版のまま残ると、新 HTML と旧 JS の版ズレで描画時に例外 → 「データを取得できません
+でした」表示になる事故が起きる（iOS Safari で発生。2026-09-07 の hotfix `fix/asset-cache-busting`）。
+
+- **`assets/app.js` か `assets/style.css` を変更したら、`index.html` の `?v=` を必ず更新する**
+  （`<link ... style.css?v=...>` と `<script ... app.js?v=...>` の2か所）。値はデプロイ日
+  （`YYYYMMDD`）でよい。ビルドステップは無いので手動更新。
+- `data/*.json` の取得も `assets/app.js` の `withCacheBuster()` で毎回 `?t=<ミリ秒>` を付与し、
+  `{ cache: "no-store" }` 非対応環境（iOS Safari の一部）でも最新値を引く。
+
 ## ライセンス
 
 MIT（本リポジトリのコード）。ダムのデータは福岡市オープンデータの利用条件に従う。
