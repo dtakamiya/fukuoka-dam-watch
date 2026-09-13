@@ -19,6 +19,7 @@
 | `wl-dam-05` | 推移グラフ（Chart.js・24h / 7d / 30d トグル・指標切替・系列 on/off） | ✅ |
 | `wl-dam-06` | 仕上げ（出典・ライセンス表記の確定、スクリーンショット整理、最終確認） | ✅ |
 | `design-v1` | デザイン刷新（リングゲージ・4段階しきい値・内訳バー・スパークライン・グラフのゾーン帯・モバイル2列タイル・ダークモード） | ✅ |
+| `weather-v1` | ダム地点のリアルタイム天気表示（Open-Meteo・毎正時バッチ取得・`scripts/fetch-weather.mjs`） | ✅ |
 
 フロントの現在値表示・グラフ描画は、実データが無くても `data/*.sample.json` で開発できる。
 
@@ -49,15 +50,16 @@ python3 -m http.server 8000
 推移グラフが描画され、24時間 / 7日 / 30日トグル（**初期表示は 30日**）・指標（貯水率 / 貯水量）切替・
 系列 on/off（既定は合計のみ）が動くこと。貯水率表示時はグラフ背景にしきい値ゾーン帯が出ること。
 スマホ幅（`<= 540px`）で 9 ダムが 2 列タイルになり、OS のダークモードで配色が切り替わること。
-JS 構文チェックは `node --check assets/app.js`。
+各ダムカードに現在天気（絵文字・気温・降水量）が出ること。JS 構文チェックは `node --check assets/app.js`。
 
 ### ローカル開発時のデータ
 
-`data/latest.json` / `data/history.json`（実データ）は Git 管理外で、GitHub Actions
-（`.github/workflows/update-data.yml`）が毎正時に生成・コミットする。ローカルや初回 Action 実行前は
-これらが存在しないため、フロント（wl-dam-04 以降）は **実データの取得に失敗したら
-`data/*.sample.json`（40 日分の合成ダミー・リポジトリにコミット済み）にフォールバック** する。
-実データを手元で作りたい場合は `node scripts/fetch-dams.mjs` を実行する。
+`data/latest.json` / `data/history.json` / `data/weather.json`（実データ）は Git 管理外で、
+GitHub Actions（`.github/workflows/update-data.yml`）が毎正時に生成・コミットする。ローカルや初回
+Action 実行前はこれらが存在しないため、フロント（wl-dam-04 以降）は **実データの取得に失敗したら
+`data/*.sample.json`（40 日分の合成ダミー・リポジトリにコミット済み）にフォールバック** する
+（天気は取得・サンプルどちらも失敗したら天気欄を非表示にするだけで、他の表示には影響しない）。
+実データを手元で作りたい場合は `node scripts/fetch-dams.mjs` / `node scripts/fetch-weather.mjs` を実行する。
 
 ## スクリーンショット
 
@@ -74,6 +76,11 @@ JS 構文チェックは `node --check assets/app.js`。
 色に依存しないよう形状アイコンと `aria-label`（例「前日同時間比 貯水率 上昇 0.3ポイント」）でも
 増減を伝える。左端の色帯は貯水率ステータスで、増減とは独立。前月同時間比は `history.json` に
 30日超のデータが蓄積されるまでは「—」表示になる。
+
+各ダムカードには、そのダム地点の現在天気（Open-Meteo・絵文字アイコン＋気温＋直近1時間降水量）も
+表示する。天気は `data/weather.json`（`scripts/fetch-weather.mjs` が毎正時生成）から取得し、
+貯水量データとは独立して扱う。取得に失敗した場合は天気欄を非表示にするだけで、貯水量表示や
+「サンプルデータ表示中」バッジには影響しない。
 
 | デスクトップ | 狭幅（スマホ相当） |
 | --- | --- |

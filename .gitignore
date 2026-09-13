@@ -11,3 +11,4 @@ data/*.tmp
 # ローカル実行分はコミットしない（*.sample.json のみバージョン管理する）。
 data/latest.json
 data/history.json
+data/weather.json

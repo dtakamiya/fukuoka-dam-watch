@@ -281,6 +281,17 @@ body {
 .delta-line.is-flat { color: var(--faint); }
 .delta-line.is-flat .delta-line-lead { color: var(--faint); }
 
+/* ---- ダム地点の現在天気（Open-Meteo） ---- */
+.weather-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.weather-line .weather-line-icon { font-size: 0.9rem; line-height: 1; }
+
 /* ---- 内訳セグメントバー ---- */
 .breakdown {
   display: flex;

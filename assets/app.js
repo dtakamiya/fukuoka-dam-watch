@@ -225,6 +225,77 @@ function makeDeltaLine(deltaRate, label) {
   return el;
 }
 
+/*
+ * 現在の天気（ダム地点）
+ *   data/weather.json（Open-Meteo・WMO weather code）を絵文字＋気温＋降水量の1行に変換する。
+ *   取得失敗時は data/weather.json 自体が渡ってこない（load() 側で null 化）ため、
+ *   この行は呼び出し元でスキップされ、カードには何も表示されない。
+ */
+var WEATHER_CODE_INFO = {
+  0: { icon: "☀️", label: "快晴" },
+  1: { icon: "🌤️", label: "晴れ" },
+  2: { icon: "⛅", label: "薄曇り" },
+  3: { icon: "☁️", label: "曇り" },
+  45: { icon: "🌫️", label: "霧" },
+  48: { icon: "🌫️", label: "霧氷" },
+  51: { icon: "🌦️", label: "霧雨" },
+  53: { icon: "🌦️", label: "霧雨" },
+  55: { icon: "🌦️", label: "霧雨" },
+  56: { icon: "🌦️", label: "着氷性の霧雨" },
+  57: { icon: "🌦️", label: "着氷性の霧雨" },
+  61: { icon: "🌧️", label: "雨" },
+  63: { icon: "🌧️", label: "雨" },
+  65: { icon: "🌧️", label: "強い雨" },
+  66: { icon: "🌧️", label: "着氷性の雨" },
+  67: { icon: "🌧️", label: "着氷性の雨" },
+  71: { icon: "🌨️", label: "雪" },
+  73: { icon: "🌨️", label: "雪" },
+  75: { icon: "🌨️", label: "強い雪" },
+  77: { icon: "🌨️", label: "霧雪" },
+  80: { icon: "🌦️", label: "にわか雨" },
+  81: { icon: "🌦️", label: "にわか雨" },
+  82: { icon: "🌧️", label: "激しいにわか雨" },
+  85: { icon: "🌨️", label: "にわか雪" },
+  86: { icon: "🌨️", label: "激しいにわか雪" },
+  95: { icon: "⛈️", label: "雷雨" },
+  96: { icon: "⛈️", label: "雷雨（ひょう）" },
+  99: { icon: "⛈️", label: "雷雨（ひょう）" }
+};
+
+function weatherCodeInfo(code) {
+  return WEATHER_CODE_INFO[code] || { icon: "🌡️", label: "不明" };
+}
+
+function makeWeatherLine(entry) {
+  if (!entry || typeof entry.temperature !== "number") return null;
+  var info = weatherCodeInfo(entry.weatherCode);
+  var tempText = (Math.round(entry.temperature * 10) / 10).toFixed(1) + "°C";
+  var precipText = typeof entry.precipitation === "number"
+    ? "降水 " + (Math.round(entry.precipitation * 10) / 10).toFixed(1) + "mm"
+    : null;
+
+  var el = document.createElement("span");
+  el.className = "weather-line";
+  el.setAttribute("role", "img");
+  el.setAttribute(
+    "aria-label",
+    "現在の天気 " + info.label + " " + tempText + (precipText ? " " + precipText : "")
+  );
+
+  var icon = document.createElement("span");
+  icon.className = "weather-line-icon";
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = info.icon;
+
+  var val = document.createElement("span");
+  val.className = "weather-line-val";
+  val.textContent = tempText + (precipText ? " ／ " + precipText : "");
+
+  el.appendChild(icon);
+  el.appendChild(val);
+  return el;
+}
+
 // JST の ISO 文字列（+09:00 付き）を "2026-09-06 14:00 (JST)" に
 function fmtObservedAt(iso) {
   if (!iso) return "—";
@@ -408,12 +479,13 @@ function renderSummary(total, delta, monthDelta, dams, history) {
   renderSparkline(history);
 }
 
-function renderDamList(dams, deltas, monthDeltas) {
+function renderDamList(dams, deltas, monthDeltas, weather) {
   var list = document.getElementById("dam-list");
   if (!list) return;
   list.innerHTML = "";
   var byKey = {};
   (dams || []).forEach(function (d) { byKey[d.key] = d; });
+  var weatherByKey = (weather && weather.dams) || {};
 
   var frag = document.createDocumentFragment();
   DAMS.forEach(function (def) {
@@ -450,6 +522,8 @@ function renderDamList(dams, deltas, monthDeltas) {
     var md = monthDeltas[def.key];
     meta.appendChild(makeDeltaLine(d && dd ? dd.rate : null, "前日同時間比"));
     meta.appendChild(makeDeltaLine(d && md ? md.rate : null, "前月同時間比"));
+    var weatherLine = makeWeatherLine(weatherByKey[def.key]);
+    if (weatherLine) meta.appendChild(weatherLine);
     var sub = document.createElement("span");
     sub.className = "dam-sub";
     sub.textContent = d
@@ -535,6 +609,17 @@ function loadJson(realPath, samplePath) {
 }
 
 /*
+ * 天気は貯水量データと独立した「あれば出す」情報。
+ * 実データ・サンプルどちらの取得にも失敗したら null を返し、呼び出し側は
+ * 天気欄を描画しない（サンプルバッジなど貯水量側の表示には一切影響させない）。
+ */
+function loadWeatherJson() {
+  return loadJson("data/weather.json", "data/weather.sample.json")
+    .then(function (res) { return res.data; })
+    .catch(function () { return null; });
+}
+
+/*
  * 自動更新（クライアント側）
  *   サーバ側は GitHub Actions が毎時データを更新する（README「自動更新」参照）。
  *   ページを開きっぱなしでも最新値が出るよう、以下の2契機で再取得する:
@@ -552,10 +637,12 @@ function load(isRefresh) {
   dataState.loading = true;
   Promise.all([
     loadJson("data/latest.json", "data/latest.sample.json"),
-    loadJson("data/history.json", "data/history.sample.json")
+    loadJson("data/history.json", "data/history.sample.json"),
+    loadWeatherJson()
   ]).then(function (results) {
     var latestRes = results[0];
     var historyRes = results[1];
+    var weather = results[2];
     var latest = latestRes.data;
     var history = historyRes.data;
     var usedSample = latestRes.sample || historyRes.sample;
@@ -565,7 +652,7 @@ function load(isRefresh) {
     renderStatus(usedSample ? "sample" : "ok", latest);
     document.getElementById("sample-badge").hidden = !usedSample;
     renderSummary(latest.total, deltas.total, monthDeltas.total, latest.dams, history);
-    renderDamList(latest.dams, deltas, monthDeltas);
+    renderDamList(latest.dams, deltas, monthDeltas, weather);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
     if (isRefresh) {
