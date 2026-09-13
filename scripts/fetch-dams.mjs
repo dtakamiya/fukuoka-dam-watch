@@ -21,7 +21,9 @@
  * 環境変数（主に CI・デバッグ用）:
  *   FETCH_DAMS_LOCAL_DIR=<dir>   HTTP 取得の代わりに <dir>/YYYYMMdata.csv を読む（オフライン擬似実行）
  *   FETCH_DAMS_BASE_URL=<url>    CSV ダウンロード URL のベースを差し替える（失敗系テスト用）
- *   FETCH_DAMS_RETAIN_DAYS=<n>   history.json に残す日数（既定 40。最低 35 を確保する要件）
+ *   FETCH_DAMS_RETAIN_DAYS=<n>   history.json に残す日数
+ *     （既定 60。前月同時間比〔30日前の同時刻との比較〕に必要な最低30日超を
+ *      安全マージン込みで確保する要件）
  *
  * 失敗時の挙動:
  *   当月 CSV の取得・デコード・パースで失敗したら、既存の data/*.json を一切書き換えず
@@ -42,7 +44,7 @@ const BASE_URL =
   process.env.FETCH_DAMS_BASE_URL ||
   "https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1/resource/a5b26052-26d1-4c7a-b63f-5736de453bc1/download";
 const LOCAL_DIR = process.env.FETCH_DAMS_LOCAL_DIR || null;
-const RETAIN_DAYS = Number(process.env.FETCH_DAMS_RETAIN_DAYS || 40);
+const RETAIN_DAYS = Number(process.env.FETCH_DAMS_RETAIN_DAYS || 60);
 
 const UNIT = "千m3"; // BODIK 原資料の単位（千立方メートル）
 

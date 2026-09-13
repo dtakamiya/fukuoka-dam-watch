@@ -256,9 +256,12 @@ body {
 .summary-delta {
   margin: 0;
   font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
-/* ---- 前日同時間比（1系統に集約・貯水率のみ） ---- */
+/* ---- 前日同時間比・前月同時間比（貯水率のみ・2行で表示） ---- */
 .delta-line {
   display: inline-flex;
   align-items: center;
