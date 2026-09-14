@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-14T22:17:16.102Z",
-  "observedAt": "2026-09-15T07:00:00+09:00",
+  "generatedAt": "2026-09-14T23:17:23.865Z",
+  "observedAt": "2026-09-15T08:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": true,
   "source": {
@@ -40,7 +40,7 @@
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 4583,
+      "storage": 4575,
       "capacity": 24000,
       "rate": 19.1
     },
@@ -76,8 +76,8 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 36173,
+    "storage": 36165,
     "capacity": 76877,
-    "rate": 47.1
+    "rate": 47
   }
 }
