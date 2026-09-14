@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T15:47:19.405Z",
+  "generatedAt": "2026-09-14T16:17:19.647Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 20.5,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-15T00:45"
+      "observedAt": "2026-09-15T01:15"
     },
     "gokayama": {
-      "temperature": 20.4,
+      "temperature": 20.3,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-15T00:45"
+      "observedAt": "2026-09-15T01:15"
     },
     "sefuri": {
       "temperature": 18.6,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-15T00:45"
+      "observedAt": "2026-09-15T01:15"
     },
     "magaribuchi": {
       "temperature": 20.8,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-15T00:45"
+      "observedAt": "2026-09-15T01:15"
     },
     "egawa": {
-      "temperature": 21.7,
+      "temperature": 21.6,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-15T00:45"
+      "observedAt": "2026-09-15T01:15"
     },
     "kubara": {
-      "temperature": 21.1,
+      "temperature": 21,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-15T00:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-15T01:15"
     },
     "hase": {
       "temperature": 21.3,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-15T00:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-15T01:15"
     },
     "ino": {
       "temperature": 21.1,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-15T00:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-15T01:15"
     },
     "zuibaiji": {
       "temperature": 20.7,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-15T00:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-15T01:15"
     }
   }
 }
