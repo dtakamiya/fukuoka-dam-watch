@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-09-15T21:15:04.606Z",
+  "generatedAt": "2026-09-15T21:47:24.530Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 19.9,
+      "temperature": 20,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "gokayama": {
       "temperature": 20.4,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "sefuri": {
-      "temperature": 18,
+      "temperature": 18.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "magaribuchi": {
-      "temperature": 19.8,
+      "temperature": 20,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "egawa": {
       "temperature": 21.4,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "kubara": {
-      "temperature": 22,
+      "temperature": 22.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "hase": {
-      "temperature": 22.2,
+      "temperature": 22.3,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "ino": {
-      "temperature": 21.4,
+      "temperature": 21.5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     },
     "zuibaiji": {
-      "temperature": 20.9,
+      "temperature": 21,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-16T06:15"
+      "observedAt": "2026-09-16T06:45"
     }
   }
 }
