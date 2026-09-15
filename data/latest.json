@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-15T22:17:22.089Z",
-  "observedAt": "2026-09-16T07:00:00+09:00",
+  "generatedAt": "2026-09-15T23:17:18.650Z",
+  "observedAt": "2026-09-16T08:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": true,
   "source": {
@@ -19,9 +19,9 @@
     {
       "key": "gokayama",
       "name": "五ケ山ダム",
-      "storage": 15427,
+      "storage": 15419,
       "capacity": 31700,
-      "rate": 48.7
+      "rate": 48.6
     },
     {
       "key": "sefuri",
@@ -40,7 +40,7 @@
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 4459,
+      "storage": 4456,
       "capacity": 24000,
       "rate": 18.6
     },
@@ -76,7 +76,7 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 35925,
+    "storage": 35914,
     "capacity": 76877,
     "rate": 46.7
   }
