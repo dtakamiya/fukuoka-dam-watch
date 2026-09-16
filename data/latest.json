@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-16T19:17:17.846Z",
-  "observedAt": "2026-09-17T04:00:00+09:00",
+  "generatedAt": "2026-09-16T20:17:19.224Z",
+  "observedAt": "2026-09-17T05:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": true,
   "source": {
@@ -19,7 +19,7 @@
     {
       "key": "gokayama",
       "name": "五ケ山ダム",
-      "storage": 15308,
+      "storage": 15300,
       "capacity": 31700,
       "rate": 48.3
     },
@@ -33,14 +33,14 @@
     {
       "key": "magaribuchi",
       "name": "曲渕ダム",
-      "storage": 2024,
+      "storage": 2023,
       "capacity": 2368,
-      "rate": 85.5
+      "rate": 85.4
     },
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 4317,
+      "storage": 4309,
       "capacity": 24000,
       "rate": 18
     },
@@ -54,9 +54,9 @@
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 3548,
+      "storage": 3545,
       "capacity": 4850,
-      "rate": 73.2
+      "rate": 73.1
     },
     {
       "key": "ino",
@@ -76,8 +76,8 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 35647,
+    "storage": 35627,
     "capacity": 76877,
-    "rate": 46.4
+    "rate": 46.3
   }
 }
