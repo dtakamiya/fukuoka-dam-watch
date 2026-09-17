@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T19:47:17.122Z",
+  "generatedAt": "2026-09-17T20:17:19.199Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 21.5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     },
     "gokayama": {
-      "temperature": 21.7,
+      "temperature": 21.6,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-18T04:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-18T05:15"
     },
     "sefuri": {
       "temperature": 19.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     },
     "magaribuchi": {
       "temperature": 21.9,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-18T04:45"
+      "weatherCode": 2,
+      "observedAt": "2026-09-18T05:15"
     },
     "egawa": {
+      "temperature": 23.5,
+      "precipitation": 0,
+      "weatherCode": 3,
+      "observedAt": "2026-09-18T05:15"
+    },
+    "kubara": {
       "temperature": 23.4,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-18T04:45"
-    },
-    "kubara": {
-      "temperature": 23.5,
-      "precipitation": 0,
-      "weatherCode": 2,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     },
     "hase": {
-      "temperature": 23.8,
+      "temperature": 23.7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     },
     "ino": {
       "temperature": 23,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     },
     "zuibaiji": {
       "temperature": 22.3,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-18T04:45"
+      "observedAt": "2026-09-18T05:15"
     }
   }
 }
