@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-18T22:17:19.689Z",
-  "observedAt": "2026-09-19T07:00:00+09:00",
+  "generatedAt": "2026-09-18T23:17:20.125Z",
+  "observedAt": "2026-09-19T08:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": true,
   "source": {
@@ -12,14 +12,14 @@
     {
       "key": "minamibata",
       "name": "南畑ダム",
-      "storage": 2577,
+      "storage": 2579,
       "capacity": 3650,
-      "rate": 70.6
+      "rate": 70.7
     },
     {
       "key": "gokayama",
       "name": "五ケ山ダム",
-      "storage": 14991,
+      "storage": 14983,
       "capacity": 31700,
       "rate": 47.3
     },
@@ -54,7 +54,7 @@
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 3511,
+      "storage": 3509,
       "capacity": 4850,
       "rate": 72.4
     },
@@ -76,7 +76,7 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 34986,
+    "storage": 34978,
     "capacity": 76877,
     "rate": 45.5
   }
