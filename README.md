@@ -106,6 +106,16 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 
 ![現在値ビュー（ダークモード）](docs/screenshots/current-view-dark.png)
 
+### データ鮮度バッジ
+
+`latest.json` の `observedAt` が現在時刻から **3 時間以上**古いと、画面上部に赤い警告バー
+「データが更新されていません（最終: YYYY-MM-DD HH:MM）」を出す（しきい値と根拠は `assets/app.js` の
+`STALE_THRESHOLD_MS` コメント）。sample フォールバック中は鮮度警告を出さず「サンプルデータ表示中」バッジのみ。
+
+| 正常（警告なし） | 古い（警告バー） | sample フォールバック |
+| --- | --- | --- |
+| ![鮮度OK](docs/screenshots/data-freshness-ok.jpg) | ![鮮度警告](docs/screenshots/data-freshness-stale.jpg) | ![sample表示](docs/screenshots/data-freshness-sample.jpg) |
+
 > 狭幅ショットはブラウザウィンドウを 430px 幅に絞り `@media (max-width: 540px)` のスタイルを適用して撮影。
 > ライト系ショットは撮影環境が OS ダーク設定のため、`:root` のカラートークンを一時的にライト値へ
 > 差し替えて撮影している（`@media (prefers-color-scheme: dark)` の配線自体は別途ダークショットで確認済み）。

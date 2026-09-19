@@ -575,6 +575,29 @@ function renderBootstrapNote(latest, history) {
   el.hidden = false;
 }
 
+/*
+ * データ鮮度の警告（wl-dam-08）。
+ *   STALE_THRESHOLD_MS = 3 時間（暫定）。根拠: 更新は毎正時（Actions は毎時 17/47 分に走り、
+ *   遅延しても通常 1〜2 時間以内に反映）。観測時刻は毎正時なので、3 時間超は 2 回以上の更新が
+ *   欠けたことを意味し、Actions 停止・データ源の障害を疑うべき水準。閲覧者自身が気付けるようにする。
+ *   sample フォールバック中は sample の観測時刻が古いのが当然なので、鮮度警告は出さず
+ *   「サンプルデータ表示中」バッジ（別要素）だけを出す。
+ */
+var STALE_THRESHOLD_MS = 3 * 60 * 60 * 1000;
+
+function renderStaleAlert(latest, usedSample) {
+  var el = document.getElementById("stale-alert");
+  var ms = latest ? Date.parse(latest.observedAt) : NaN;
+  if (usedSample || isNaN(ms) || Date.now() - ms < STALE_THRESHOLD_MS) {
+    el.hidden = true;
+    el.textContent = "";
+    return;
+  }
+  var m = String(latest.observedAt).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/);
+  el.textContent = "データが更新されていません（最終: " + (m ? m[1] + " " + m[2] : latest.observedAt) + "）";
+  el.hidden = false;
+}
+
 function renderUpdatedLine(latest, usedSample) {
   var el = document.getElementById("updated-line");
   if (!latest) { el.textContent = ""; return; }
@@ -655,6 +678,7 @@ function load(isRefresh) {
     renderDamList(latest.dams, deltas, monthDeltas, weather);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
+    renderStaleAlert(latest, usedSample);
     if (isRefresh) {
       chartState.history = history;
       renderChart();
