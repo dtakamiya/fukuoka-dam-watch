@@ -314,6 +314,25 @@ JS/CSS が旧版のまま残ると、新 HTML と旧 JS の版ズレで描画時
 - `data/*.json` の取得も `assets/app.js` の `withCacheBuster()` で毎回 `?t=<ミリ秒>` を付与し、
   `{ cache: "no-store" }` 非対応環境（iOS Safari の一部）でも最新値を引く。
 
+### ブランチ運用・未追跡ファイルのルール
+
+2026-09-06 に、ブランチ切替時のクリーンアップ（`git clean -fd`）で **未追跡だった dispatch スクリプトが消え**、
+launchd が exit 127 → 毎時ディスパッチ停止 → 22:00 のデータ欠落、という事故が起きた。再発防止のルール:
+
+- **`git clean -fd` / `-fdx` を無条件に実行しない。** 必要な場合は先に `git clean -nd`（dry-run）で
+  対象を確認し、消えて困る未追跡ファイルが無いことを確かめてから実行する。
+- **運用に必要なファイルは Git 管理下に置く**（例: `scripts/dispatch-update-data.sh`・launchd の plist）。
+  未追跡のまま運用しない。置きたくないもの（ログ等）は `.gitignore` で意図を明示する。
+- ブランチ切替前に `git status` で未追跡ファイルを確認する。
+
+未追跡・無視ファイルの棚卸し（2026-09-19 時点）:
+
+| パス | 扱い | 理由 |
+| --- | --- | --- |
+| `.claude/`（`settings.json`） | 未追跡のまま | ローカルのエージェント設定。リポジトリの運用には不要（消えても運用に影響なし） |
+| `tmp/`（`dispatch.log` / `launchd.*`） | `.gitignore` 済み | launchd のログ出力先。再生成可能 |
+| `node_modules/` `.env*` `*.log` `dist/` | `.gitignore` 済み | 生成物・秘匿情報 |
+
 ## ライセンス
 
 MIT（本リポジトリのコード）。ダムのデータは福岡市オープンデータの利用条件に従う。
