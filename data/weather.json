@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-09-19T19:17:17.167Z",
+  "generatedAt": "2026-09-19T19:47:50.959Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
+      "temperature": 20.7,
+      "precipitation": 0,
+      "weatherCode": 2,
+      "observedAt": "2026-09-20T04:45"
+    },
+    "gokayama": {
       "temperature": 20.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-20T04:15"
-    },
-    "gokayama": {
-      "temperature": 20.5,
-      "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "sefuri": {
       "temperature": 18.8,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "magaribuchi": {
-      "temperature": 21.2,
+      "temperature": 21.3,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "egawa": {
-      "temperature": 21.1,
+      "temperature": 21.2,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "kubara": {
       "temperature": 22.3,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "hase": {
-      "temperature": 22.5,
+      "temperature": 22.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "ino": {
       "temperature": 22,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     },
     "zuibaiji": {
       "temperature": 21.5,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-20T04:15"
+      "observedAt": "2026-09-20T04:45"
     }
   }
 }
