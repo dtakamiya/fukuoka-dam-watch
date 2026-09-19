@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-09-19T03:47:22.753Z",
+  "generatedAt": "2026-09-19T04:17:17.322Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 22,
+      "temperature": 21.9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "gokayama": {
       "temperature": 21.7,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "sefuri": {
-      "temperature": 20.1,
+      "temperature": 19.9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "magaribuchi": {
       "temperature": 21.9,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "egawa": {
       "temperature": 23,
-      "precipitation": 0.1,
-      "weatherCode": 51,
-      "observedAt": "2026-09-19T12:45"
+      "precipitation": 0,
+      "weatherCode": 2,
+      "observedAt": "2026-09-19T13:15"
     },
     "kubara": {
       "temperature": 22.7,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "hase": {
       "temperature": 23,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     },
     "ino": {
       "temperature": 22.2,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-09-19T12:45"
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-09-19T13:15"
     },
     "zuibaiji": {
-      "temperature": 22.1,
+      "temperature": 22,
       "precipitation": 0.2,
       "weatherCode": 53,
-      "observedAt": "2026-09-19T12:45"
+      "observedAt": "2026-09-19T13:15"
     }
   }
 }
