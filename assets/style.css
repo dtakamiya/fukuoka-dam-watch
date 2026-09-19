@@ -152,6 +152,17 @@ body {
   background: currentColor;
 }
 
+.stale-alert {
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 1rem;
+  background: var(--crit-bg);
+  border: 1px solid var(--crit);
+  border-radius: 8px;
+  color: var(--crit);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .sample-badge {
   display: inline-block;
   margin: 0.8rem 0 0;
