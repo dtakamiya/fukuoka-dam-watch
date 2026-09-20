@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-09-20T19:17:19.633Z",
+  "generatedAt": "2026-09-20T19:47:26.342Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 20.6,
+      "temperature": 20.5,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "gokayama": {
-      "temperature": 20.3,
+      "temperature": 20.2,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "sefuri": {
-      "temperature": 18.7,
+      "temperature": 18.4,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "magaribuchi": {
-      "temperature": 21.5,
+      "temperature": 21.2,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "egawa": {
       "temperature": 20.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "kubara": {
       "temperature": 22.4,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "hase": {
-      "temperature": 22.7,
+      "temperature": 22.6,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "ino": {
       "temperature": 22.1,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "observedAt": "2026-09-21T04:45"
     },
     "zuibaiji": {
-      "temperature": 21.6,
+      "temperature": 21.4,
       "precipitation": 0,
-      "weatherCode": 2,
-      "observedAt": "2026-09-21T04:15"
+      "weatherCode": 3,
+      "observedAt": "2026-09-21T04:45"
     }
   }
 }
