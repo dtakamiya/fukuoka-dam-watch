@@ -104,6 +104,14 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 
 ![現在値ビュー・2列タイル（スマホ相当）](docs/screenshots/current-view-mobile-tiles.png)
 
+### ミニトレンド（直近12時間・wl-dam-16）
+
+各ダムカードと合計サマリに、直近12時間（12点）の貯水率を Chart.js の小さな折れ線で表示（新規依存なし）。
+有効な点が4点未満のときは描画を省略する。縦軸は各ダムごとの自動スケールで、変化の向きを見るためのもの（ダム間の絶対比較には使えない）。
+
+| ![合計サマリ（PC）](docs/screenshots/mini-trend-summary-pc.jpg) | ![ダムカード（PC）](docs/screenshots/mini-trend-cards-pc.jpg) | ![ダムカード（スマホ幅390px）](docs/screenshots/mini-trend-cards-mobile.jpg) |
+|---|---|---|
+
 ### 推移グラフ
 
 合計貯水率の推移。24時間 / 7日 / 30日トグル（初期表示は 30日）・指標（貯水率 / 貯水量）切替・系列 on/off。
