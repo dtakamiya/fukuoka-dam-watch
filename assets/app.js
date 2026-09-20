@@ -454,6 +454,73 @@ function renderSparkline(history) {
   host.appendChild(cap);
 }
 
+/*
+ * wl-dam-16: 直近12時間のミニトレンド（Chart.js の既存依存のみ・軸/凡例/ツールチップなし）。
+ *   history.series の末尾 12 点（毎正時 = 約12時間）から key の貯水率を取る。
+ *   有効点が MIN_SPARK_POINTS 未満なら描画せず null を返す（レイアウトを崩さない）。
+ */
+var SPARK_POINTS = 12;
+var MIN_SPARK_POINTS = 4;
+var sparkCharts = [];
+
+function destroySparkCharts() {
+  sparkCharts.forEach(function (c) { try { c.destroy(); } catch (e) { /* noop */ } });
+  sparkCharts = [];
+}
+
+function makeMiniTrend(history, key, cls) {
+  if (typeof Chart === "undefined") return null;
+  var series = (history && history.series) || [];
+  var pts = series.slice(-SPARK_POINTS)
+    .map(function (s) { return s.rate && s.rate[key] != null ? s.rate[key] : null; });
+  var valid = pts.filter(function (v) { return v != null; });
+  if (valid.length < MIN_SPARK_POINTS) return null;
+
+  var wrap = document.createElement("div");
+  wrap.className = "mini-trend";
+  var box = document.createElement("div");
+  box.className = "mini-trend-box";
+  var canvas = document.createElement("canvas");
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute("aria-label",
+    "直近12時間の貯水率の推移（" + fmtRate(valid[0]) + " → " + fmtRate(valid[valid.length - 1]) + "）");
+  box.appendChild(canvas);
+  var cap = document.createElement("span");
+  cap.className = "mini-trend-cap";
+  cap.setAttribute("aria-hidden", "true");
+  cap.textContent = "12時間";
+  wrap.appendChild(box);
+  wrap.appendChild(cap);
+
+  var color = cssVar("--" + cls.replace("is-", ""), cssVar("--accent", "#2b8cbe"));
+  var chart = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: pts.map(function (_v, i) { return i; }),
+      datasets: [{
+        data: pts,
+        borderColor: color,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0.3,
+        spanGaps: true,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      events: [],
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { display: false }, y: { display: false } },
+      layout: { padding: 1 }
+    }
+  });
+  sparkCharts.push(chart);
+  return wrap;
+}
+
 function renderSummary(total, delta, monthDelta, dams, history) {
   if (!total) return;
   var card = document.getElementById("summary-card");
@@ -479,9 +546,15 @@ function renderSummary(total, delta, monthDelta, dams, history) {
 
   renderBreakdown(dams);
   renderSparkline(history);
+
+  var sumBody = card.querySelector(".summary-body");
+  var old = sumBody.querySelector(".mini-trend");
+  if (old) old.remove();
+  var mt = makeMiniTrend(history, "total", rateClass(total.rate));
+  if (mt) sumBody.appendChild(mt);
 }
 
-function renderDamList(dams, deltas, monthDeltas, weather) {
+function renderDamList(dams, deltas, monthDeltas, weather, history) {
   var list = document.getElementById("dam-list");
   if (!list) return;
   list.innerHTML = "";
@@ -538,6 +611,8 @@ function renderDamList(dams, deltas, monthDeltas, weather) {
 
     li.appendChild(head);
     li.appendChild(body);
+    var mt = d ? makeMiniTrend(history, def.key, rateClass(rate)) : null;
+    if (mt) li.appendChild(mt);
     frag.appendChild(li);
   });
   list.appendChild(frag);
@@ -676,8 +751,9 @@ function load(isRefresh) {
     var monthDeltas = buildMonthDeltas(history);
     renderStatus(usedSample ? "sample" : "ok", latest);
     document.getElementById("sample-badge").hidden = !usedSample;
+    destroySparkCharts();
     renderSummary(latest.total, deltas.total, monthDeltas.total, latest.dams, history);
-    renderDamList(latest.dams, deltas, monthDeltas, weather);
+    renderDamList(latest.dams, deltas, monthDeltas, weather, history);
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
     renderStaleAlert(latest, usedSample);
