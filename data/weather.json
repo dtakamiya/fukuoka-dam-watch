@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-09-23T05:17:18.375Z",
+  "generatedAt": "2026-09-23T05:47:23.397Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 24.6,
+      "temperature": 24.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "gokayama": {
-      "temperature": 25.1,
+      "temperature": 24.8,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-23T14:15"
+      "weatherCode": 0,
+      "observedAt": "2026-09-23T14:45"
     },
     "sefuri": {
-      "temperature": 22.4,
+      "temperature": 22.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "magaribuchi": {
-      "temperature": 23.9,
+      "temperature": 23.7,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "egawa": {
       "temperature": 27.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "kubara": {
-      "temperature": 26,
+      "temperature": 25.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "hase": {
-      "temperature": 26.3,
+      "temperature": 26.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "ino": {
-      "temperature": 25.2,
+      "temperature": 25.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     },
     "zuibaiji": {
-      "temperature": 24.2,
+      "temperature": 24,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-09-23T14:15"
+      "observedAt": "2026-09-23T14:45"
     }
   }
 }
