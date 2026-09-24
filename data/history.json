@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T05:17:17.468Z",
+  "generatedAt": "2026-09-24T06:17:25.231Z",
   "unit": "千m3",
   "retainDays": 60,
   "bootstrapping": true,
@@ -15213,24 +15213,24 @@
         "gokayama": 14066,
         "sefuri": 3620,
         "magaribuchi": 1978,
-        "egawa": 4022,
+        "egawa": 3047,
         "kubara": 1111,
         "hase": 3374,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33924
+        "total": 32949
       },
       "rate": {
         "minamibata": 74.3,
         "gokayama": 44.4,
         "sefuri": 91,
         "magaribuchi": 83.5,
-        "egawa": 16.8,
+        "egawa": 12.7,
         "kubara": 76.1,
         "hase": 69.6,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.9
       }
     },
     {
@@ -15240,24 +15240,24 @@
         "gokayama": 14058,
         "sefuri": 3620,
         "magaribuchi": 1978,
-        "egawa": 4022,
+        "egawa": 3037,
         "kubara": 1111,
         "hase": 3374,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33916
+        "total": 32931
       },
       "rate": {
         "minamibata": 74.3,
         "gokayama": 44.3,
         "sefuri": 91,
         "magaribuchi": 83.5,
-        "egawa": 16.8,
+        "egawa": 12.7,
         "kubara": 76.1,
         "hase": 69.6,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.8
       }
     },
     {
@@ -15267,24 +15267,24 @@
         "gokayama": 14051,
         "sefuri": 3617,
         "magaribuchi": 1977,
-        "egawa": 4022,
+        "egawa": 3027,
         "kubara": 1110,
         "hase": 3374,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33904
+        "total": 32909
       },
       "rate": {
         "minamibata": 74.3,
         "gokayama": 44.3,
         "sefuri": 90.9,
         "magaribuchi": 83.5,
-        "egawa": 16.8,
+        "egawa": 12.6,
         "kubara": 76,
         "hase": 69.6,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.8
       }
     },
     {
@@ -15294,24 +15294,24 @@
         "gokayama": 14043,
         "sefuri": 3614,
         "magaribuchi": 1975,
-        "egawa": 4022,
+        "egawa": 3018,
         "kubara": 1110,
         "hase": 3371,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33890
+        "total": 32886
       },
       "rate": {
         "minamibata": 74.4,
         "gokayama": 44.3,
         "sefuri": 90.8,
         "magaribuchi": 83.4,
-        "egawa": 16.8,
+        "egawa": 12.6,
         "kubara": 76,
         "hase": 69.5,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.8
       }
     },
     {
@@ -15321,24 +15321,24 @@
         "gokayama": 14043,
         "sefuri": 3608,
         "magaribuchi": 1975,
-        "egawa": 4022,
+        "egawa": 3008,
         "kubara": 1109,
         "hase": 3371,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33883
+        "total": 32869
       },
       "rate": {
         "minamibata": 74.4,
         "gokayama": 44.3,
         "sefuri": 90.7,
         "magaribuchi": 83.4,
-        "egawa": 16.8,
+        "egawa": 12.5,
         "kubara": 76,
         "hase": 69.5,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.8
       }
     },
     {
@@ -15348,24 +15348,51 @@
         "gokayama": 14035,
         "sefuri": 3605,
         "magaribuchi": 1973,
-        "egawa": 4022,
+        "egawa": 2998,
         "kubara": 1108,
         "hase": 3368,
         "ino": 2388,
         "zuibaiji": 653,
-        "total": 33868
+        "total": 32844
       },
       "rate": {
         "minamibata": 74.4,
         "gokayama": 44.3,
         "sefuri": 90.6,
         "magaribuchi": 83.3,
-        "egawa": 16.8,
+        "egawa": 12.5,
         "kubara": 75.9,
         "hase": 69.4,
         "ino": 65.4,
         "zuibaiji": 53.5,
-        "total": 44.1
+        "total": 42.7
+      }
+    },
+    {
+      "observedAt": "2026-09-24T15:00:00+09:00",
+      "storage": {
+        "minamibata": 2716,
+        "gokayama": 14035,
+        "sefuri": 3602,
+        "magaribuchi": 1973,
+        "egawa": 2989,
+        "kubara": 1108,
+        "hase": 3368,
+        "ino": 2388,
+        "zuibaiji": 653,
+        "total": 32832
+      },
+      "rate": {
+        "minamibata": 74.4,
+        "gokayama": 44.3,
+        "sefuri": 90.5,
+        "magaribuchi": 83.3,
+        "egawa": 12.5,
+        "kubara": 75.9,
+        "hase": 69.4,
+        "ino": 65.4,
+        "zuibaiji": 53.5,
+        "total": 42.7
       }
     }
   ]
