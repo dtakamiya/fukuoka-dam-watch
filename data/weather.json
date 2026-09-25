@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T13:47:24.378Z",
+  "generatedAt": "2026-09-25T14:17:22.915Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 20.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "gokayama": {
-      "temperature": 20.7,
+      "temperature": 20.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "sefuri": {
       "temperature": 18.8,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "magaribuchi": {
-      "temperature": 20.9,
+      "temperature": 20.7,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "egawa": {
-      "temperature": 21.6,
-      "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
-    },
-    "kubara": {
       "temperature": 21.5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
+    },
+    "kubara": {
+      "temperature": 21.3,
+      "precipitation": 0,
+      "weatherCode": 1,
+      "observedAt": "2026-09-25T23:15"
     },
     "hase": {
-      "temperature": 21.7,
+      "temperature": 21.5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "ino": {
-      "temperature": 21.2,
+      "temperature": 21,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     },
     "zuibaiji": {
       "temperature": 21.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-09-25T22:45"
+      "observedAt": "2026-09-25T23:15"
     }
   }
 }
