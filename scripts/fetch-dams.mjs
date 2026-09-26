@@ -4,7 +4,10 @@
  *
  * BODIK 配信の当月＋前月 CSV（Shift_JIS / 毎正時1時間粒度 / 当月ローリング）を
  * 取得・デコードし、既存の data/history.json に累積マージして
- * data/latest.json（最新1時点）と data/history.json（直近 RETAIN_DAYS 日の時系列）を生成する。
+ * data/latest.json（最新1時点）と data/history.json（時系列）を生成する。
+ * history.json の保持ポリシー: 直近 HOURLY_DAYS 日は1時間粒度、それより古く
+ * RETAIN_DAYS 日以内は各日1点（12:00 JST 優先）に間引き、それより古いものは削除
+ * （実装は history-retention.mjs）。
  *
  * ■ データ源の制約（重要）
  *   BODIK の CSV リソースはファイル名の YYYYMM 接頭辞を無視し、常に「当月分の
@@ -21,9 +24,10 @@
  * 環境変数（主に CI・デバッグ用）:
  *   FETCH_DAMS_LOCAL_DIR=<dir>   HTTP 取得の代わりに <dir>/YYYYMMdata.csv を読む（オフライン擬似実行）
  *   FETCH_DAMS_BASE_URL=<url>    CSV ダウンロード URL のベースを差し替える（失敗系テスト用）
- *   FETCH_DAMS_RETAIN_DAYS=<n>   history.json に残す日数
- *     （既定 60。前月同時間比〔30日前の同時刻との比較〕に必要な最低30日超を
- *      安全マージン込みで確保する要件）
+ *   FETCH_DAMS_RETAIN_DAYS=<n>   history.json に残す総日数
+ *     （既定 400。日次に間引いた点も含む。長期グラフ〔1年〕用）
+ *   FETCH_DAMS_HOURLY_DAYS=<n>   1時間粒度のまま保持する直近日数
+ *     （既定 35。30d グラフ＋前月同時間比〔30日前の同時刻〕に必要な期間＋余裕）
  *
  * 失敗時の挙動:
  *   当月 CSV の取得・デコード・パースで失敗したら、既存の data/*.json を一切書き換えず
@@ -34,6 +38,7 @@
 import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { applyRetention, DEFAULT_HOURLY_DAYS, DEFAULT_RETAIN_DAYS } from "./history-retention.mjs";
 import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -44,7 +49,8 @@ const BASE_URL =
   process.env.FETCH_DAMS_BASE_URL ||
   "https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1/resource/a5b26052-26d1-4c7a-b63f-5736de453bc1/download";
 const LOCAL_DIR = process.env.FETCH_DAMS_LOCAL_DIR || null;
-const RETAIN_DAYS = Number(process.env.FETCH_DAMS_RETAIN_DAYS || 60);
+const RETAIN_DAYS = Number(process.env.FETCH_DAMS_RETAIN_DAYS || DEFAULT_RETAIN_DAYS);
+const HOURLY_DAYS = Number(process.env.FETCH_DAMS_HOURLY_DAYS || DEFAULT_HOURLY_DAYS);
 
 const UNIT = "千m3"; // BODIK 原資料の単位（千立方メートル）
 
@@ -237,7 +243,7 @@ function rate(storage, capacity) {
 
 async function main() {
   const [prevMonth, curMonth] = targetMonths();
-  log(`対象月: ${prevMonth}, ${curMonth} / retain ${RETAIN_DAYS} 日`);
+  log(`対象月: ${prevMonth}, ${curMonth} / hourly ${HOURLY_DAYS} 日 / retain ${RETAIN_DAYS} 日`);
 
   // --- 取得 & パース（1つでも致命的失敗なら throw → 既存JSONは保持） ---
   const monthResults = [];
@@ -270,10 +276,9 @@ async function main() {
   let merged = [...byEpoch.values()].sort((a, b) => a.epoch - b.epoch);
   if (merged.length === 0) throw new FetchDamsError("マージ結果が空です");
 
-  // --- 直近 RETAIN_DAYS 日に絞る（最新観測を基準） ---
+  // --- 保持ポリシー適用: 直近 HOURLY_DAYS 日は1時間粒度、古い分は日次に間引き、RETAIN_DAYS 超は削除 ---
   const latestEpoch = merged[merged.length - 1].epoch;
-  const cutoff = latestEpoch - RETAIN_DAYS * 24 * 3600 * 1000;
-  merged = merged.filter((r) => r.epoch >= cutoff);
+  merged = applyRetention(merged, { hourlyDays: HOURLY_DAYS, retainDays: RETAIN_DAYS });
   const spanDays = (latestEpoch - merged[0].epoch) / (24 * 3600 * 1000);
   const bootstrapping = spanDays < 35;
   log(
@@ -317,6 +322,7 @@ async function main() {
     generatedAt,
     unit: UNIT,
     retainDays: RETAIN_DAYS,
+    hourlyDays: HOURLY_DAYS,
     bootstrapping,
     spanDays: Math.round(spanDays * 10) / 10,
     dams: [...DAMS.map((d) => ({ key: d.key, name: d.name })), { key: TOTAL.key, name: TOTAL.name }],
