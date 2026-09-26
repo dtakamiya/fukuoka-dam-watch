@@ -7,7 +7,7 @@
   <title>fukuoka-dam-watch — 福岡市関連9ダム貯水状況</title>
   <meta name="description" content="福岡市関連9ダム（南畑・五ケ山・脊振・曲渕・江川・久原・長谷・猪野・瑞梅寺）の貯水量・貯水率を1時間粒度で可視化する静的サイト。">
   <!-- ?v= はフロント資産のキャッシュバスター。app.js / style.css を変更したら必ず更新する（README「開発」参照）。 -->
-  <link rel="stylesheet" href="assets/style.css?v=20260920">
+  <link rel="stylesheet" href="assets/style.css?v=20260926">
 </head>
 <body>
   <header class="site-header">
@@ -66,6 +66,8 @@
           <button type="button" data-range="24h">24時間</button>
           <button type="button" data-range="7d">7日</button>
           <button type="button" data-range="30d" class="is-active">30日</button>
+          <button type="button" data-range="90d">90日</button>
+          <button type="button" data-range="1y">1年</button>
         </div>
         <div class="metric-toggle" id="metric-toggle" role="group" aria-label="表示指標">
           <button type="button" data-metric="rate" class="is-active">貯水率 (%)</button>
@@ -108,6 +110,6 @@
   <!-- Chart.js（CDN・1本のみ / バンドラなし） -->
   <!-- defer: 読み込みを並列化しつつ実行順（Chart.js → app.js）を保証。app.js は DOMContentLoaded で初期化。 -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script defer src="assets/app.js?v=20260920"></script>
+  <script defer src="assets/app.js?v=20260926"></script>
 </body>
 </html>
