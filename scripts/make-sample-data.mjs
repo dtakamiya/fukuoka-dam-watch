@@ -14,6 +14,7 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { applyRetention, DEFAULT_HOURLY_DAYS, DEFAULT_RETAIN_DAYS } from "./history-retention.mjs";
 
 const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const UNIT = "千m3";
@@ -32,7 +33,9 @@ const DAMS = [
 const TOTAL = { key: "total", name: "9ダム合計" };
 const TOTAL_CAP = DAMS.reduce((n, d) => n + d.capacity, 0); // 76877
 
-const HOURS = 40 * 24; // 40 日分・毎正時（30d グラフに加え、前月同時間比〔30日前〕の動作確認に必要な期間）
+// 120 日分を毎正時で生成し、本番と同じ保持ポリシー（直近35日は毎正時／古い分は日次）で間引く。
+// 90日・1年グラフ（長期推移ビュー）の動作確認用。
+const HOURS = 120 * 24;
 const rate = (s, c) => Math.round((s / c) * 1000) / 10;
 
 // 決定論的な擬似乱数（seed 固定で再現可能）
@@ -44,7 +47,7 @@ function rand() {
 
 // 起点の観測時刻（末尾＝直近の正時）から HOURS 分さかのぼる
 const endHour = new Date("2026-09-06T14:00:00+09:00").getTime();
-const series = [];
+const rawSeries = [];
 const level = Object.fromEntries(DAMS.map((d) => [d.key, d.start + d.drift * HOURS]));
 
 for (let i = 0; i < HOURS; i++) {
@@ -70,8 +73,12 @@ for (let i = 0; i < HOURS; i++) {
   for (const d of DAMS) rateObj[d.key] = rate(storage[d.key], d.capacity);
   rateObj[TOTAL.key] = rate(total, TOTAL_CAP);
 
-  series.push({ observedAt, storage, rate: rateObj });
+  rawSeries.push({ epoch: t.getTime(), observedAt, storage, rate: rateObj });
 }
+
+const series = applyRetention(rawSeries, { hourlyDays: DEFAULT_HOURLY_DAYS, retainDays: DEFAULT_RETAIN_DAYS })
+  .map(({ epoch, ...rest }) => rest);
+const spanDays = (Date.parse(series[series.length - 1].observedAt) - Date.parse(series[0].observedAt)) / 86400000;
 
 const generatedAt = "2026-09-06T05:00:00.000Z";
 const capacities = Object.fromEntries([...DAMS.map((d) => [d.key, d.capacity]), [TOTAL.key, TOTAL_CAP]]);
@@ -79,10 +86,11 @@ const capacities = Object.fromEntries([...DAMS.map((d) => [d.key, d.capacity]), 
 const historySample = {
   generatedAt,
   unit: UNIT,
-  retainDays: 60,
+  retainDays: DEFAULT_RETAIN_DAYS,
+  hourlyDays: DEFAULT_HOURLY_DAYS,
   bootstrapping: false,
-  spanDays: Math.round(((HOURS - 1) / 24) * 10) / 10,
-  _note: "SAMPLE / DUMMY DATA (40日・minify) — フロント開発用の合成値。実データではない。",
+  spanDays: Math.round(spanDays * 10) / 10,
+  _note: "SAMPLE / DUMMY DATA (120日: 直近35日は毎正時・古い分は日次・minify) — フロント開発用の合成値。実データではない。",
   dams: [...DAMS.map((d) => ({ key: d.key, name: d.name })), { key: TOTAL.key, name: TOTAL.name }],
   capacities,
   series,

@@ -200,7 +200,7 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 
 `scripts/fetch-dams.mjs` が `data/` に2ファイルを生成する（Git 管理外・Actions が生成）。
 フロント開発用に同スキーマのダミーデータ `data/latest.sample.json`（pretty）/
-`data/history.sample.json`（30 日分・サイズ削減のため minify）をコミットしてある
+`data/history.sample.json`（120 日分〔直近35日は毎正時・古い分は日次〕・サイズ削減のため minify）をコミットしてある
 （`_note` フィールドでサンプルと明示）。
 
 ### `data/latest.json` — 最新1時点
@@ -220,18 +220,19 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 }
 ```
 
-### `data/history.json` — 時系列（直近 `retainDays` 日・昇順）
+### `data/history.json` — 時系列（最大 `retainDays` 日・昇順）
 
 ```jsonc
 {
   "generatedAt": "2026-09-06T05:44:19.960Z",
   "unit": "千m3",
-  "retainDays": 60,                           // 保持する日数（前月同時間比に必要な30日超を確保する設定）
+  "retainDays": 400,                          // 保持する総日数（日次に間引いた点を含む）
+  "hourlyDays": 35,                           // 直近この日数は毎正時のまま保持（それ以前は1日1点）
   "bootstrapping": true,
   "spanDays": 5.6,                            // series が実際にカバーしている日数
   "dams": [ { "key": "minamibata", "name": "南畑ダム" }, /* ... */ { "key": "total", "name": "9ダム合計" } ],
   "capacities": { "minamibata": 3650, /* ... */ "total": 76877 },
-  "series": [                                 // 古い順。毎正時1点
+  "series": [                                 // 古い順。直近 hourlyDays 日は毎正時、それ以前は1日1点
     {
       "observedAt": "2026-09-01T00:00:00+09:00",
       "storage": { "minamibata": 2601, /* ... */ "total": 41788 },
@@ -241,6 +242,21 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
   ]
 }
 ```
+
+### `history.json` の保持ポリシー
+
+長期グラフ（90日・1年）のため、古いデータは日次に間引いて長く残す（`scripts/history-retention.mjs`）。
+
+| 期間（最新観測を基準） | 粒度 | 定数（env で上書き可） |
+|---|---|---|
+| 直近 `HOURLY_DAYS` = **35** 日 | 毎正時（1時間粒度のまま） | `FETCH_DAMS_HOURLY_DAYS` |
+| それより古く `RETAIN_DAYS` = **400** 日以内 | **各 JST 暦日 1 点**（12:00 の観測。無ければその日で最も 12:00 に近い観測） | `FETCH_DAMS_RETAIN_DAYS` |
+| `RETAIN_DAYS` より古い | 削除 | — |
+
+- 35 日は 30d グラフ＋前月同時間比（30日前の同時刻）に必要な期間へ余裕を足した値。直近30日の表示品質は変わらない。
+- 時間粒度ゾーンの開始は「(最新 − 35日) を含む JST 日の 0:00」に揃える。日の途中で切らないので、実行を重ねても日次点が揺れない。
+- 冪等: 間引き済みの日次点に、CSV 再取得分（当月＋前月）をマージして再適用しても 1 日 1 点に収束する（同一時刻は CSV 値で上書き）。
+- テスト: `node --test scripts/history-retention.test.mjs`
 
 ## データ取得スクリプトの実行方法
 
@@ -257,7 +273,8 @@ node scripts/make-sample-data.mjs    # data/*.sample.json を再生成（フロ�
 - 環境変数（CI・デバッグ用）:
   - `FETCH_DAMS_LOCAL_DIR=<dir>` — HTTP 取得の代わりに `<dir>/YYYYMMdata.csv` を読む（オフライン擬似実行）
   - `FETCH_DAMS_BASE_URL=<url>` — CSV ダウンロード URL のベースを差し替える（失敗系テスト用）
-  - `FETCH_DAMS_RETAIN_DAYS=<n>` — `history.json` に残す日数（既定 60）
+  - `FETCH_DAMS_RETAIN_DAYS=<n>` — `history.json` に残す総日数（既定 400）
+  - `FETCH_DAMS_HOURLY_DAYS=<n>` — 毎正時のまま残す直近日数（既定 35）
 
 ## 自動更新
 
