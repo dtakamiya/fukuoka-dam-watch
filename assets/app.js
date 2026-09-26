@@ -811,8 +811,20 @@ var SERIES_KEYS = DAMS.map(function (d) { return d.key; }).concat(["total"]);
 var SERIES_LABELS = { total: "9ダム合計" };
 DAMS.forEach(function (d) { SERIES_LABELS[d.key] = d.label; });
 
-// 期間ごとの「末尾から何点使うか」（毎正時＝1点/時）
-var RANGE_POINTS = { "24h": 24, "7d": 24 * 7, "30d": 24 * 30 };
+/*
+ * 期間ごとの設定。切り出しは「点数」ではなく最新観測からの時刻差（ms）で行う。
+ * history.json は直近35日が毎正時、それより古い分が日次に間引かれる（wl-dam-13）ため、
+ * 点数ベースだと間引き混在後に 30d などの範囲がずれる。
+ * daily: true の期間（90日・1年）は 1 日 1 点（12:00 に最も近い観測）にフロントで集約して描く。
+ */
+var DAY_MS = 24 * 60 * 60 * 1000;
+var RANGES = {
+  "24h": { ms: 1 * DAY_MS, daily: false },
+  "7d": { ms: 7 * DAY_MS, daily: false },
+  "30d": { ms: 30 * DAY_MS, daily: false },
+  "90d": { ms: 90 * DAY_MS, daily: true },
+  "1y": { ms: 365 * DAY_MS, daily: true }
+};
 
 var chartState = {
   range: "30d",
@@ -866,19 +878,77 @@ var thresholdZonesPlugin = {
   }
 };
 
-// observedAt(+09:00) を軸ラベルへ。24h は "H時"、それ以上は "M/D"
-function fmtAxisLabel(iso, range) {
+// observedAt(+09:00) を軸ラベルへ。24h は "H時"、7d/30d は "M/D"、
+// 90日・1年（daily）は月初の点だけ "M月"、それ以外は "M/D"
+function fmtAxisLabel(iso, range, isMonthStart) {
   var m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!m) return String(iso);
   if (range === "24h") return String(Number(m[4])) + "時";
+  if (isMonthStart) return String(Number(m[2])) + "月";
   return String(Number(m[2])) + "/" + String(Number(m[3]));
 }
 
-// 現在の range に対応する series の抜粋（データが足りなければある分だけ）
+var JST_OFFSET_MS = 9 * 60 * 60 * 1000;
+function jstDayKey(epoch) { return Math.floor((epoch + JST_OFFSET_MS) / DAY_MS); }
+function noonEpochOf(dayKey) { return dayKey * DAY_MS - JST_OFFSET_MS + 12 * 60 * 60 * 1000; }
+
+/*
+ * 時間粒度と日次点が混在した series を「1 日 1 点」にする（JST 暦日単位）。
+ * 各日 12:00 に最も近い観測を採用（同距離なら早い方）。ただし最新の日は
+ * 「現在値」と揃うよう最新観測を採る。入力は epoch 昇順の { epoch, row } 配列。
+ */
+function aggregateDaily(items) {
+  var groups = [];
+  var byDay = {};
+  items.forEach(function (it) {
+    var k = jstDayKey(it.epoch);
+    var g = byDay[k];
+    if (!g) { g = byDay[k] = { key: k, best: it, dist: Math.abs(it.epoch - noonEpochOf(k)), last: it }; groups.push(g); return; }
+    var d = Math.abs(it.epoch - noonEpochOf(k));
+    if (d < g.dist) { g.best = it; g.dist = d; }
+    g.last = it;
+  });
+  return groups.map(function (g, i) { return i === groups.length - 1 ? g.last.row : g.best.row; });
+}
+
+// 現在の range に対応する series の抜粋（最新観測から range.ms 以内。足りなければある分だけ）
 function slicedSeries() {
   var all = (chartState.history && chartState.history.series) || [];
-  var want = RANGE_POINTS[chartState.range] || all.length;
-  return all.length > want ? all.slice(all.length - want) : all.slice();
+  var cfg = RANGES[chartState.range];
+  if (!cfg || all.length === 0) return all.slice();
+  var items = all.map(function (row) { return { epoch: Date.parse(row.observedAt), row: row }; })
+    .filter(function (it) { return !isNaN(it.epoch); });
+  if (items.length === 0) return [];
+  var cutoff = items[items.length - 1].epoch - cfg.ms;
+  items = items.filter(function (it) { return it.epoch > cutoff; });
+  return cfg.daily ? aggregateDaily(items) : items.map(function (it) { return it.row; });
+}
+
+/*
+ * 長期レンジ用の軸ラベル間引き。月初の点（ラベル "M月"）を優先して残し、
+ * 月初が多すぎるときは間引く。月初の間を埋める "M/D" は月初から十分離れた等間隔の点だけ。
+ * 返り値: 表示する index の集合（{ index: true }）。
+ */
+function pickLongTicks(rows, maxTicks) {
+  var monthIdx = [];
+  var prev = null;
+  rows.forEach(function (r, i) {
+    var mo = String(r.observedAt).slice(0, 7);
+    if (prev !== null && mo !== prev) monthIdx.push(i);
+    prev = mo;
+  });
+  var shown = {};
+  var kStep = Math.max(1, Math.ceil(monthIdx.length / Math.max(1, maxTicks)));
+  var keptMonths = monthIdx.filter(function (_v, j) { return j % kStep === 0; });
+  keptMonths.forEach(function (i) { shown[i] = true; });
+  if (kStep === 1 && keptMonths.length < maxTicks) {
+    var step = Math.max(1, Math.ceil(rows.length / maxTicks));
+    for (var i = 0; i < rows.length; i += step) {
+      var near = keptMonths.some(function (mi) { return Math.abs(mi - i) < step * 0.75; });
+      if (!near && !monthIdx.some(function (mi) { return mi === i; })) shown[i] = true;
+    }
+  }
+  return shown;
 }
 
 function buildDatasets(rows) {
@@ -919,7 +989,17 @@ function renderChart() {
     return;
   }
   var rows = slicedSeries();
-  var labels = rows.map(function (s) { return fmtAxisLabel(s.observedAt, chartState.range); });
+  var cfg = RANGES[chartState.range] || {};
+  var monthStart = {};
+  rows.forEach(function (r, i) {
+    if (i > 0 && String(r.observedAt).slice(0, 7) !== String(rows[i - 1].observedAt).slice(0, 7)) monthStart[i] = true;
+  });
+  var labels = rows.map(function (s, i) {
+    return fmtAxisLabel(s.observedAt, chartState.range, cfg.daily && !!monthStart[i]);
+  });
+  var canvasEl = document.getElementById("trend-chart");
+  var boxWidth = (canvasEl && canvasEl.parentElement && canvasEl.parentElement.clientWidth) || 640;
+  var longTicks = cfg.daily ? pickLongTicks(rows, boxWidth < 520 ? 6 : 10) : null;
   var datasets = buildDatasets(rows);
   var isRate = chartState.metric === "rate";
   var gridColor = cssVar("--border", "#dde4ea");
@@ -935,6 +1015,12 @@ function renderChart() {
       legend: { display: true, position: "bottom", labels: { color: textColor } },
       tooltip: {
         callbacks: {
+          // 長期レンジは軸ラベルが "M月" 等に略されるので、ツールチップは日付を完全表記にする
+          title: function (items) {
+            if (!cfg.daily || !items.length) return items.length ? items[0].label : "";
+            var m = String(rows[items[0].dataIndex].observedAt).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            return m ? m[1] + "/" + Number(m[2]) + "/" + Number(m[3]) : items[0].label;
+          },
           label: function (ctx) {
             var v = ctx.parsed.y;
             if (v == null) return ctx.dataset.label + ": —";
@@ -947,7 +1033,7 @@ function renderChart() {
       x: {
         ticks: {
           color: tickColor,
-          autoSkip: true,
+          autoSkip: !cfg.daily,
           maxRotation: 0,
           maxTicksLimit: chartState.range === "24h" ? 12 : 10
         },
@@ -964,6 +1050,13 @@ function renderChart() {
       }
     }
   };
+
+  // 長期レンジだけ軸ラベルを月境界優先で間引く（undefined を渡すと既定のラベル変換が消えるため条件付きで設定）
+  if (cfg.daily) {
+    options.scales.x.ticks.callback = function (value, index) {
+      return longTicks[index] ? this.getLabelForValue(value) : null;
+    };
+  }
 
   if (chartState.chart) {
     chartState.chart.data = data;
@@ -982,17 +1075,23 @@ function renderChart() {
 
   // bootstrapping 中でデータが要求期間に満たない場合の注記
   var note = document.getElementById("chart-note");
+  // 保有データの時間幅（最古〜最新）が要求期間に満たなければ注記。
+  // 許容差: 毎正時レンジは 90 分、日次レンジは 1 日（先頭日が 12:00 前後の代表点になるため）
   var all = (chartState.history && chartState.history.series) || [];
-  var want = RANGE_POINTS[chartState.range] || all.length;
-  if (all.length < want) {
-    var haveH = all.length;
-    note.textContent =
-      "この期間はまだデータが不足しています（保有 " + haveH + " 時間分＝約 " +
-      (Math.round(haveH / 24 * 10) / 10) + " 日）。取得済みの範囲だけを表示しています。";
-    note.hidden = false;
-  } else {
-    note.hidden = true;
+  var epochs = all.map(function (r) { return Date.parse(r.observedAt); }).filter(function (e) { return !isNaN(e); });
+  var msgs = [];
+  if (cfg.ms && epochs.length) {
+    var spanMs = epochs[epochs.length - 1] - epochs[0];
+    if (spanMs < cfg.ms - (cfg.daily ? DAY_MS : 90 * 60 * 1000)) {
+      msgs.push(
+        "この期間はまだデータが不足しています（保有 約 " + (Math.round(spanMs / DAY_MS * 10) / 10) +
+        " 日分）。取得済みの範囲だけを表示しています。"
+      );
+    }
   }
+  if (cfg.daily) msgs.push("90日・1年は各日 12:00 前後の観測値（日次代表値）で表示しています。");
+  note.textContent = msgs.join(" ");
+  note.hidden = msgs.length === 0;
 }
 
 function wireToggle(containerId, attr, apply) {
