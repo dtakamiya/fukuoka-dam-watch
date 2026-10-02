@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-02T17:47:56.513Z",
+  "generatedAt": "2026-10-02T18:17:20.616Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 15.5,
+      "temperature": 15.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "gokayama": {
-      "temperature": 15.9,
+      "temperature": 15.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "sefuri": {
-      "temperature": 13.4,
+      "temperature": 13.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "magaribuchi": {
-      "temperature": 14.5,
+      "temperature": 14.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "egawa": {
-      "temperature": 17,
+      "temperature": 16.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "kubara": {
-      "temperature": 17.3,
+      "temperature": 17.2,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "hase": {
       "temperature": 17.5,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "ino": {
-      "temperature": 16.9,
+      "temperature": 16.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     },
     "zuibaiji": {
       "temperature": 16.5,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T02:45"
+      "observedAt": "2026-10-03T03:15"
     }
   }
 }
