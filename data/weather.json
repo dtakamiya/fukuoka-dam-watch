@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-02T18:47:19.956Z",
+  "generatedAt": "2026-10-02T19:17:34.852Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 15.5,
+      "temperature": 15.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "gokayama": {
-      "temperature": 16.1,
+      "temperature": 16,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "sefuri": {
-      "temperature": 13.4,
+      "temperature": 13.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "magaribuchi": {
       "temperature": 14.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "egawa": {
       "temperature": 17.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "kubara": {
-      "temperature": 17.5,
+      "temperature": 17.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "hase": {
-      "temperature": 17.8,
+      "temperature": 17.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "ino": {
-      "temperature": 17.2,
+      "temperature": 17.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     },
     "zuibaiji": {
       "temperature": 16.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-03T03:45"
+      "observedAt": "2026-10-03T04:15"
     }
   }
 }
