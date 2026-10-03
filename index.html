@@ -32,7 +32,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
   <!-- ?v= はフロント資産のキャッシュバスター。app.js / style.css を変更したら必ず更新する（README「開発」参照）。 -->
-  <link rel="stylesheet" href="assets/style.css?v=20260926">
+  <link rel="stylesheet" href="assets/style.css?v=20261003">
 </head>
 <body>
   <header class="site-header">
@@ -76,6 +76,7 @@
           <span class="legend-item"><span class="swatch is-crit"></span>危険 (&lt;30%)</span>
         </p>
       </div>
+      <p class="dam-list-hint">カードをタップ／クリックすると、そのダムの推移グラフと諸元を表示します。</p>
       <ul class="dam-list" id="dam-list">
         <!-- assets/app.js が描画 -->
       </ul>
@@ -115,6 +116,40 @@
     <p class="updated-line" id="updated-line"></p>
   </main>
 
+  <!-- ダム個別の詳細（wl-dam-11）。assets/app.js がカードのボタンから開閉・描画する -->
+  <dialog class="dam-modal" id="dam-modal" role="dialog" aria-modal="true" aria-label="ダムの詳細">
+    <div class="dam-modal-panel">
+      <div class="dam-modal-head">
+        <h2 id="dam-modal-title" class="dam-modal-title"></h2>
+        <span class="dam-badge" id="dam-modal-badge"></span>
+        <button type="button" class="dam-modal-close" id="dam-modal-close" aria-label="閉じる">&times;</button>
+      </div>
+
+      <dl class="dam-facts">
+        <div><dt>利水容量</dt><dd><span id="dam-modal-capacity">—</span> <small>千m³</small></dd></div>
+        <div><dt>現在貯水量</dt><dd><span id="dam-modal-storage">—</span> <small>千m³</small></dd></div>
+        <div><dt>貯水率</dt><dd><span id="dam-modal-rate">—</span></dd></div>
+      </dl>
+
+      <div class="chart-controls">
+        <div class="range-toggle" id="dam-modal-range" role="group" aria-label="表示期間">
+          <button type="button" data-range="24h">24時間</button>
+          <button type="button" data-range="7d" class="is-active">7日</button>
+          <button type="button" data-range="30d">30日</button>
+        </div>
+        <div class="metric-toggle" id="dam-modal-metric" role="group" aria-label="表示指標">
+          <button type="button" data-metric="rate" class="is-active">貯水率 (%)</button>
+          <button type="button" data-metric="storage">貯水量 (千m³)</button>
+        </div>
+      </div>
+
+      <div class="chart-box dam-modal-chart">
+        <canvas id="dam-modal-chart" role="img" aria-label="ダム貯水の推移グラフ"></canvas>
+      </div>
+      <p class="chart-note" id="dam-modal-note" hidden></p>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <p>
       出典: 福岡市オープンデータ（BODIK 配信）
@@ -135,6 +170,6 @@
   <!-- Chart.js（CDN・1本のみ / バンドラなし） -->
   <!-- defer: 読み込みを並列化しつつ実行順（Chart.js → app.js）を保証。app.js は DOMContentLoaded で初期化。 -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script defer src="assets/app.js?v=20260926"></script>
+  <script defer src="assets/app.js?v=20261003"></script>
 </body>
 </html>
