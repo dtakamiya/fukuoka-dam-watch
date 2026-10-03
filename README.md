@@ -155,6 +155,15 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 > ライト系ショットは撮影環境が OS ダーク設定のため、`:root` のカラートークンを一時的にライト値へ
 > 差し替えて撮影している（`@media (prefers-color-scheme: dark)` の配線自体は別途ダークショットで確認済み）。
 
+### OGP・favicon（wl-dam-10）
+
+`index.html` の `<head>` に title / description、OGP（`og:title` / `og:description` / `og:url` / `og:image`）、
+Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`apple-touch-icon`（180px）を設定。
+`og:image` は静的画像 `docs/og-image.png`（1200×630）で、`og:url` / `og:image` は GitHub Pages の公開 URL の絶対 URL。
+画面本体の見た目は変わらないため、既存の画面スクリーンショットは据え置き（変わったのはタブのアイコンと共有カードのみ）。
+
+![favicon・apple-touch-icon・og:image](docs/screenshots/favicon-ogp-assets.png)
+
 ## 使用ライブラリ
 
 - 推移グラフは **Chart.js**（`cdn.jsdelivr.net` から CDN 参照・バンドラなし）。
