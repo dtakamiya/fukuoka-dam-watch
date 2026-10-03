@@ -21,6 +21,12 @@
  *   - 貯水率表示時は背景にしきい値ゾーン帯（安全/注意/警戒/危険）を敷き、y 軸を 0–100 に固定、
  *     平常ライン（60%）を破線、末尾に現在値マーカーを打つ（プラグイン追加なし・自前の inline plugin）
  *   - bootstrapping 中で series が要求期間に満たないときは、ある分だけ描画し注記する
+ *
+ * wl-dam-11（ダム個別の詳細）の責務:
+ *   - 現在値ビューの各ダムカード（カード全体を覆うボタン）から <dialog> モーダルを開き、
+ *     そのダムの諸元（利水容量・現在貯水量・貯水率）と個別推移（貯水率/貯水量 × 24h/7d/30d）を表示する
+ *   - グラフは推移グラフと同じ buildChartPayload / thresholdZonesPlugin を再利用（新規ライブラリなし）
+ *   - Esc・×・背景クリックで閉じ、閉じたらフォーカスをそのダムのカードボタンへ戻す
  */
 
 "use strict";
@@ -574,13 +580,20 @@ function renderDamList(dams, deltas, monthDeltas, weather, history) {
     // ヘッダ: ダム名 ＋ ステータスバッジ
     var head = document.createElement("div");
     head.className = "dam-head";
+    // カード全体を覆うボタン（stretched ::after）。キーボード操作・スクリーンリーダーはこのボタンで開く
+    var open = document.createElement("button");
+    open.type = "button";
+    open.className = "dam-open";
+    open.setAttribute("aria-haspopup", "dialog");
+    open.setAttribute("aria-label", def.label + "の詳細を開く");
     var name = document.createElement("span");
     name.className = "dam-name";
     name.textContent = def.label;
+    open.appendChild(name);
     var badge = document.createElement("span");
     badge.className = "dam-badge";
     badge.textContent = d ? rateLabel(rate) : "—";
-    head.appendChild(name);
+    head.appendChild(open);
     head.appendChild(badge);
 
     // 本体: リング（左）＋ 詳細（右）
@@ -757,6 +770,7 @@ function load(isRefresh) {
     renderBootstrapNote(latest, history);
     renderUpdatedLine(latest, usedSample);
     renderStaleAlert(latest, usedSample);
+    setDamDetailData(latest.dams, history);
     if (isRefresh) {
       chartState.history = history;
       renderChart();
@@ -830,6 +844,7 @@ var chartState = {
   range: "30d",
   metric: "rate", // "rate" | "storage"
   visible: { total: true }, // 既定は合計のみ
+  emphasize: "total",
   history: null,
   chart: null
 };
@@ -841,8 +856,9 @@ var chartState = {
  */
 var thresholdZonesPlugin = {
   id: "thresholdZones",
-  beforeDatasetsDraw: function (chart) {
-    if (chartState.metric !== "rate") return;
+  beforeDatasetsDraw: function (chart, _args, opts) {
+    // chart ごとに options.plugins.thresholdZones.enabled で切り替える（本体グラフとモーダルで共有するため）
+    if (!opts || !opts.enabled) return;
     var y = chart.scales.y;
     var x = chart.scales.x;
     if (!y || !x) return;
@@ -911,10 +927,10 @@ function aggregateDaily(items) {
   return groups.map(function (g, i) { return i === groups.length - 1 ? g.last.row : g.best.row; });
 }
 
-// 現在の range に対応する series の抜粋（最新観測から range.ms 以内。足りなければある分だけ）
-function slicedSeries() {
-  var all = (chartState.history && chartState.history.series) || [];
-  var cfg = RANGES[chartState.range];
+// state.range に対応する series の抜粋（最新観測から range.ms 以内。足りなければある分だけ）
+function slicedSeries(state) {
+  var all = (state.history && state.history.series) || [];
+  var cfg = RANGES[state.range];
   if (!cfg || all.length === 0) return all.slice();
   var items = all.map(function (row) { return { epoch: Date.parse(row.observedAt), row: row }; })
     .filter(function (it) { return !isNaN(it.epoch); });
@@ -951,14 +967,15 @@ function pickLongTicks(rows, maxTicks) {
   return shown;
 }
 
-function buildDatasets(rows) {
-  var metric = chartState.metric;
+function buildDatasets(rows, state) {
+  var metric = state.metric;
   var accent = cssVar("--accent", "#0b6e99");
   var surface = cssVar("--surface", "#ffffff");
-  return SERIES_KEYS.filter(function (k) { return chartState.visible[k]; })
+  return SERIES_KEYS.filter(function (k) { return state.visible[k]; })
     .map(function (k) {
-      var isTotal = k === "total";
-      var color = isTotal ? accent : (SERIES_COLORS[k] || "#888");
+      // 強調系列（本体グラフは合計・ダム詳細は対象ダム）は太線＋末尾に現在値マーカー
+      var isTotal = k === state.emphasize;
+      var color = k === "total" ? accent : (SERIES_COLORS[k] || "#888");
       var lastIdx = rows.length - 1;
       return {
         label: SERIES_LABELS[k],
@@ -983,25 +1000,27 @@ function buildDatasets(rows) {
     });
 }
 
-function renderChart() {
-  if (typeof Chart === "undefined") {
-    if (window.console) console.error("[fukuoka-dam-watch] Chart.js の読み込みに失敗");
-    return;
-  }
-  var rows = slicedSeries();
-  var cfg = RANGES[chartState.range] || {};
+/*
+ * state（range / metric / visible / history / emphasize）と canvas から Chart.js の data・options を作る。
+ * 本体の推移グラフ（renderChart）とダム詳細モーダル（wl-dam-11）で共有する。
+ */
+function buildChartPayload(state, canvasEl) {
+  var rows = slicedSeries(state);
+  var cfg = RANGES[state.range] || {};
   var monthStart = {};
   rows.forEach(function (r, i) {
     if (i > 0 && String(r.observedAt).slice(0, 7) !== String(rows[i - 1].observedAt).slice(0, 7)) monthStart[i] = true;
   });
   var labels = rows.map(function (s, i) {
-    return fmtAxisLabel(s.observedAt, chartState.range, cfg.daily && !!monthStart[i]);
+    return fmtAxisLabel(s.observedAt, state.range, cfg.daily && !!monthStart[i]);
   });
-  var canvasEl = document.getElementById("trend-chart");
   var boxWidth = (canvasEl && canvasEl.parentElement && canvasEl.parentElement.clientWidth) || 640;
+  // 幅の狭いグラフ（ダム詳細モーダルのスマホ幅など）は軸ラベルが重ならないよう上限を絞る
+  var tickLimit = state.range === "24h" ? 12 : 10;
+  if (state.compact) tickLimit = Math.max(3, Math.min(tickLimit, Math.floor(boxWidth / 72)));
   var longTicks = cfg.daily ? pickLongTicks(rows, boxWidth < 520 ? 6 : 10) : null;
-  var datasets = buildDatasets(rows);
-  var isRate = chartState.metric === "rate";
+  var datasets = buildDatasets(rows, state);
+  var isRate = state.metric === "rate";
   var gridColor = cssVar("--border", "#dde4ea");
   var tickColor = cssVar("--text-muted", "#5c6b7a");
   var textColor = cssVar("--text", "#1b2733");
@@ -1012,7 +1031,8 @@ function renderChart() {
     maintainAspectRatio: false,
     interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { display: true, position: "bottom", labels: { color: textColor } },
+      thresholdZones: { enabled: isRate },
+      legend: { display: state.legend !== false, position: "bottom", labels: { color: textColor } },
       tooltip: {
         callbacks: {
           // 長期レンジは軸ラベルが "M月" 等に略されるので、ツールチップは日付を完全表記にする
@@ -1035,7 +1055,7 @@ function renderChart() {
           color: tickColor,
           autoSkip: !cfg.daily,
           maxRotation: 0,
-          maxTicksLimit: chartState.range === "24h" ? 12 : 10
+          maxTicksLimit: tickLimit
         },
         grid: { display: false }
       },
@@ -1057,27 +1077,13 @@ function renderChart() {
       return longTicks[index] ? this.getLabelForValue(value) : null;
     };
   }
+  return { data: data, options: options, cfg: cfg };
+}
 
-  if (chartState.chart) {
-    chartState.chart.data = data;
-    chartState.chart.options = options;
-    chartState.chart.update();
-  } else {
-    var canvas = document.getElementById("trend-chart");
-    if (!canvas) return;
-    chartState.chart = new Chart(canvas.getContext("2d"), {
-      type: "line",
-      data: data,
-      options: options,
-      plugins: [thresholdZonesPlugin]
-    });
-  }
-
-  // bootstrapping 中でデータが要求期間に満たない場合の注記
-  var note = document.getElementById("chart-note");
-  // 保有データの時間幅（最古〜最新）が要求期間に満たなければ注記。
-  // 許容差: 毎正時レンジは 90 分、日次レンジは 1 日（先頭日が 12:00 前後の代表点になるため）
-  var all = (chartState.history && chartState.history.series) || [];
+// 保有データの時間幅（最古〜最新）が要求期間に満たなければ注記。
+// 許容差: 毎正時レンジは 90 分、日次レンジは 1 日（先頭日が 12:00 前後の代表点になるため）
+function chartNoteMessages(state, cfg) {
+  var all = (state.history && state.history.series) || [];
   var epochs = all.map(function (r) { return Date.parse(r.observedAt); }).filter(function (e) { return !isNaN(e); });
   var msgs = [];
   if (cfg.ms && epochs.length) {
@@ -1090,6 +1096,37 @@ function renderChart() {
     }
   }
   if (cfg.daily) msgs.push("90日・1年は各日 12:00 前後の観測値（日次代表値）で表示しています。");
+  return msgs;
+}
+
+function renderChart() {
+  if (typeof Chart === "undefined") {
+    if (window.console) console.error("[fukuoka-dam-watch] Chart.js の読み込みに失敗");
+    return;
+  }
+  var canvas = document.getElementById("trend-chart");
+  var payload = buildChartPayload(chartState, canvas);
+  var data = payload.data;
+  var options = payload.options;
+  var cfg = payload.cfg;
+
+  if (chartState.chart) {
+    chartState.chart.data = data;
+    chartState.chart.options = options;
+    chartState.chart.update();
+  } else {
+    if (!canvas) return;
+    chartState.chart = new Chart(canvas.getContext("2d"), {
+      type: "line",
+      data: data,
+      options: options,
+      plugins: [thresholdZonesPlugin]
+    });
+  }
+
+  // bootstrapping 中でデータが要求期間に満たない場合の注記
+  var note = document.getElementById("chart-note");
+  var msgs = chartNoteMessages(chartState, cfg);
   note.textContent = msgs.join(" ");
   note.hidden = msgs.length === 0;
 }
@@ -1152,4 +1189,179 @@ function initChart(history) {
   renderChart();
 }
 
-document.addEventListener("DOMContentLoaded", init);
+/* =====================================================================
+ * wl-dam-11 — ダム個別の詳細モーダル（<dialog> + 本体と共有の Chart.js 描画）
+ * ===================================================================== */
+
+var DETAIL_RANGE_LABELS = { "24h": "24時間", "7d": "7日", "30d": "30日" };
+
+// load() のたびに最新化する（10分ごとの再取得中にモーダルが開いていても追従させる）
+var detailData = { dams: [], history: null };
+
+var modalState = {
+  key: null,
+  range: "7d",
+  metric: "rate",
+  visible: {},
+  emphasize: null,
+  legend: false, // 単一系列なので凡例は出さない
+  compact: true,
+  history: null,
+  chart: null
+};
+
+function setDamDetailData(dams, history) {
+  detailData.dams = dams || [];
+  detailData.history = history;
+  var dlg = document.getElementById("dam-modal");
+  if (dlg && dlg.open && modalState.key) renderDamModal();
+}
+
+function destroyModalChart() {
+  if (modalState.chart) {
+    try { modalState.chart.destroy(); } catch (e) { /* noop */ }
+    modalState.chart = null;
+  }
+}
+
+function findDamData(key) {
+  for (var i = 0; i < detailData.dams.length; i++) {
+    if (detailData.dams[i].key === key) return detailData.dams[i];
+  }
+  return null;
+}
+
+function renderDamModal() {
+  var key = modalState.key;
+  var dlg = document.getElementById("dam-modal");
+  if (!key || !dlg) return;
+  var label = SERIES_LABELS[key] || key;
+  var d = findDamData(key);
+  var rate = d ? d.rate : null;
+
+  dlg.setAttribute("aria-label", label + " の詳細");
+  var panel = dlg.querySelector(".dam-modal-panel");
+  panel.className = "dam-modal-panel " + rateClass(rate);
+  document.getElementById("dam-modal-title").textContent = label;
+  document.getElementById("dam-modal-badge").textContent = d ? rateLabel(rate) : "—";
+  document.getElementById("dam-modal-capacity").textContent = d ? fmtInt(d.capacity) : "—";
+  document.getElementById("dam-modal-storage").textContent = d ? fmtInt(d.storage) : "—";
+  document.getElementById("dam-modal-rate").textContent = d ? fmtRate(rate) : "—";
+
+  document.querySelectorAll("#dam-modal-range button").forEach(function (b) {
+    b.classList.toggle("is-active", b.getAttribute("data-range") === modalState.range);
+  });
+  document.querySelectorAll("#dam-modal-metric button").forEach(function (b) {
+    b.classList.toggle("is-active", b.getAttribute("data-metric") === modalState.metric);
+  });
+  renderModalChart();
+}
+
+function renderModalChart() {
+  var canvas = document.getElementById("dam-modal-chart");
+  var note = document.getElementById("dam-modal-note");
+  if (!canvas) return;
+  if (typeof Chart === "undefined") {
+    note.textContent = "グラフを読み込めませんでした。";
+    note.hidden = false;
+    return;
+  }
+  modalState.history = detailData.history;
+  modalState.visible = {};
+  modalState.visible[modalState.key] = true;
+  modalState.emphasize = modalState.key;
+
+  var payload = buildChartPayload(modalState, canvas);
+  var label = SERIES_LABELS[modalState.key] || modalState.key;
+  canvas.setAttribute(
+    "aria-label",
+    label + "の" + (modalState.metric === "rate" ? "貯水率" : "貯水量") +
+    "の推移（直近" + DETAIL_RANGE_LABELS[modalState.range] + "）"
+  );
+
+  if (modalState.chart) {
+    modalState.chart.data = payload.data;
+    modalState.chart.options = payload.options;
+    modalState.chart.update();
+  } else {
+    modalState.chart = new Chart(canvas.getContext("2d"), {
+      type: "line",
+      data: payload.data,
+      options: payload.options,
+      plugins: [thresholdZonesPlugin]
+    });
+  }
+
+  var msgs = chartNoteMessages(modalState, payload.cfg);
+  var hasValue = payload.data.datasets.some(function (ds) {
+    return ds.data.some(function (v) { return v != null; });
+  });
+  if (!hasValue) msgs.unshift("この期間のデータがありません。");
+  note.textContent = msgs.join(" ");
+  note.hidden = msgs.length === 0;
+}
+
+function openDamModal(key) {
+  var dlg = document.getElementById("dam-modal");
+  if (!dlg || typeof dlg.showModal !== "function") return;
+  modalState.key = key;
+  modalState.range = "7d";
+  modalState.metric = "rate";
+  destroyModalChart();
+  if (!dlg.open) dlg.showModal(); // サイズ確定後に Chart を作るため先に開く
+  document.body.classList.add("has-modal");
+  renderDamModal();
+}
+
+function onDamModalClose() {
+  var key = modalState.key;
+  destroyModalChart();
+  modalState.key = null;
+  document.body.classList.remove("has-modal");
+  // 10分ごとの再取得でカードは作り直されるため、保持した要素ではなく data-dam から引き直して戻す
+  var btn = key && document.querySelector('#dam-list li[data-dam="' + key + '"] .dam-open');
+  if (btn) btn.focus();
+}
+
+function initDamModal() {
+  var dlg = document.getElementById("dam-modal");
+  var list = document.getElementById("dam-list");
+  if (!dlg || !list) return;
+
+  list.addEventListener("click", function (e) {
+    var btn = e.target.closest(".dam-open");
+    if (!btn) return;
+    var li = btn.closest("li[data-dam]");
+    if (li) openDamModal(li.dataset.dam);
+  });
+
+  // 背景クリックで閉じる（dialog 自体は padding 0・内側パネルが全面を占めるので、target が dialog なら背景）。
+  // パネル内で押下して背景で離した（テキスト選択のドラッグ等）場合は閉じない
+  var downOnBackdrop = false;
+  dlg.addEventListener("pointerdown", function (e) { downOnBackdrop = e.target === dlg; });
+  dlg.addEventListener("click", function (e) {
+    if (e.target === dlg && downOnBackdrop) dlg.close();
+    downOnBackdrop = false;
+  });
+
+  document.getElementById("dam-modal-close").addEventListener("click", function () { dlg.close(); });
+  dlg.addEventListener("close", onDamModalClose); // Esc・×・背景のどれで閉じても通る
+
+  document.getElementById("dam-modal-range").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-range]");
+    if (!b) return;
+    modalState.range = b.getAttribute("data-range");
+    renderDamModal();
+  });
+  document.getElementById("dam-modal-metric").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-metric]");
+    if (!b) return;
+    modalState.metric = b.getAttribute("data-metric");
+    renderDamModal();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  initDamModal();
+  init();
+});

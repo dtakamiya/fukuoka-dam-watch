@@ -112,6 +112,22 @@ Action 実行前はこれらが存在しないため、フロント（wl-dam-04 
 | ![合計サマリ（PC）](docs/screenshots/mini-trend-summary-pc.jpg) | ![ダムカード（PC）](docs/screenshots/mini-trend-cards-pc.jpg) | ![ダムカード（スマホ幅390px）](docs/screenshots/mini-trend-cards-mobile.jpg) |
 |---|---|---|
 
+### ダム個別の詳細（wl-dam-11）
+
+ダムカード（カード全体がボタン）をクリック／タップ／Enter・Space で押すと、そのダムの詳細モーダルを開く。
+諸元（利水容量・現在貯水量・貯水率）と、個別の推移グラフ（貯水率 / 貯水量 × 24時間・7日・30日）を表示する。
+グラフは推移グラフと同じ描画関数・しきい値ゾーン帯を再利用（新規ライブラリなし）。
+閉じるのは ×・Esc・背景クリック。閉じるとフォーカスは元のカードに戻る。スマホ幅でも画面内に収まり、
+内容が長いときはモーダル内でスクロールする。HTML 標準の `<dialog>`（`role="dialog"` / `aria-modal` / `aria-label`）を使用。
+
+| PC（ライト） | PC（ダーク） |
+| --- | --- |
+| ![ダム詳細モーダル（PC・ライト）](docs/screenshots/dam-detail-modal-pc-light.png) | ![ダム詳細モーダル（PC・ダーク）](docs/screenshots/dam-detail-modal-pc-dark.png) |
+
+| スマホ幅（ライト） | スマホ幅（ダーク） | 貯水量表示（PC） |
+| --- | --- | --- |
+| ![ダム詳細モーダル（スマホ・ライト）](docs/screenshots/dam-detail-modal-mobile-light.png) | ![ダム詳細モーダル（スマホ・ダーク）](docs/screenshots/dam-detail-modal-mobile-dark.png) | ![ダム詳細モーダル・貯水量（PC）](docs/screenshots/dam-detail-modal-storage-pc-light.png) |
+
 ### 推移グラフ
 
 合計貯水率の推移。24時間 / 7日 / 30日 / 90日 / 1年トグル（初期表示は 30日）・指標（貯水率 / 貯水量）切替・系列 on/off。
