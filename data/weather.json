@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-23T16:47:22.174Z",
+  "generatedAt": "2026-10-23T17:17:21.016Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 18.5,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
-    },
-    "gokayama": {
       "temperature": 18.2,
-      "precipitation": 0.2,
-      "weatherCode": 53,
-      "observedAt": "2026-10-24T01:45"
-    },
-    "sefuri": {
-      "temperature": 17.3,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
-    },
-    "magaribuchi": {
-      "temperature": 19.2,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
-    },
-    "egawa": {
-      "temperature": 20,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-10-24T01:45"
+      "observedAt": "2026-10-24T02:15"
+    },
+    "gokayama": {
+      "temperature": 18.1,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
+    },
+    "sefuri": {
+      "temperature": 17,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
+    },
+    "magaribuchi": {
+      "temperature": 18.4,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
+    },
+    "egawa": {
+      "temperature": 20.1,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
     },
     "kubara": {
-      "temperature": 19.2,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
+      "temperature": 19.1,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
     },
     "hase": {
       "temperature": 19.4,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
     },
     "ino": {
-      "temperature": 18.8,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
+      "temperature": 18.7,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
     },
     "zuibaiji": {
-      "temperature": 19.7,
-      "precipitation": 0.3,
-      "weatherCode": 55,
-      "observedAt": "2026-10-24T01:45"
+      "temperature": 19,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-10-24T02:15"
     }
   }
 }
