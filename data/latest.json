@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-03T04:17:21.163Z",
-  "observedAt": "2026-10-03T13:00:00+09:00",
+  "generatedAt": "2026-10-23T12:35:46.027Z",
+  "observedAt": "2026-10-23T21:00:00+09:00",
   "unit": "千m3",
-  "bootstrapping": true,
+  "bootstrapping": false,
   "source": {
     "name": "福岡市オープンデータ / BODIK 福岡市関連9ダム貯水量",
     "dataset": "https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1",
@@ -12,72 +12,72 @@
     {
       "key": "minamibata",
       "name": "南畑ダム",
-      "storage": 2611,
+      "storage": 2724,
       "capacity": 3650,
-      "rate": 71.5
+      "rate": 74.6
     },
     {
       "key": "gokayama",
       "name": "五ケ山ダム",
-      "storage": 14755,
+      "storage": 14119,
       "capacity": 31700,
-      "rate": 46.5
+      "rate": 44.5
     },
     {
       "key": "sefuri",
       "name": "脊振ダム",
-      "storage": 2983,
+      "storage": 1060,
       "capacity": 3979,
-      "rate": 75
+      "rate": 26.6
     },
     {
       "key": "magaribuchi",
       "name": "曲渕ダム",
-      "storage": 2197,
+      "storage": 1899,
       "capacity": 2368,
-      "rate": 92.8
+      "rate": 80.2
     },
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 3890,
+      "storage": 4280,
       "capacity": 24000,
-      "rate": 16.2
+      "rate": 17.8
     },
     {
       "key": "kubara",
       "name": "久原ダム",
-      "storage": 1095,
+      "storage": 1040,
       "capacity": 1460,
-      "rate": 75
+      "rate": 71.2
     },
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 3366,
+      "storage": 3104,
       "capacity": 4850,
-      "rate": 69.4
+      "rate": 64
     },
     {
       "key": "ino",
       "name": "猪野ダム",
-      "storage": 2289,
+      "storage": 1942,
       "capacity": 3650,
-      "rate": 62.7
+      "rate": 53.2
     },
     {
       "key": "zuibaiji",
       "name": "瑞梅寺ダム",
-      "storage": 790,
+      "storage": 746,
       "capacity": 1220,
-      "rate": 64.8
+      "rate": 61.1
     }
   ],
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 33976,
+    "storage": 30914,
     "capacity": 76877,
-    "rate": 44.2
+    "rate": 40.2
   }
 }
