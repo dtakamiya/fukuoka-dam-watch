@@ -59,10 +59,11 @@ const UNIT = "千m3"; // BODIK 原資料の単位（千立方メートル）
  * 出典: BODIK 同データセットの HTML リソース realtime-list.html
  *   https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1/resource/68982ce3-1c11-49df-b084-3a1049673bdf/download/realtime-list.html
  * この利水容量を分母にすると、福岡市水道局が公表する「9ダム合計貯水率」と一致する
- * （2026-09-06 14:00 時点: 合計 39,268 / 76,877 = 51.1% ← 公表値 51.1% と一致）。
+ * （2026-10-25 09:00 時点: 合計 31,053 / 78,347 = 39.6% ← 公表値 39.6% と一致）。
+ * 改訂履歴: 2026-10 に南畑ダムが 3,650 → 5,120 に改訂（2026-09-06 時点は旧値で公表値と一致していた）。
  */
 const DAMS = [
-  { key: "minamibata", name: "南畑ダム", csvHeader: "南畑ダム", capacity: 3650 },
+  { key: "minamibata", name: "南畑ダム", csvHeader: "南畑ダム", capacity: 5120 },
   { key: "gokayama", name: "五ケ山ダム", csvHeader: "五ケ山ダム", capacity: 31700 },
   { key: "sefuri", name: "脊振ダム", csvHeader: "脊振ダム", capacity: 3979 },
   { key: "magaribuchi", name: "曲渕ダム", csvHeader: "曲渕ダム", capacity: 2368 },
@@ -72,7 +73,7 @@ const DAMS = [
   { key: "ino", name: "猪野ダム", csvHeader: "猪野ダム", capacity: 3650 },
   { key: "zuibaiji", name: "瑞梅寺ダム", csvHeader: "瑞梅寺ダム", capacity: 1220 },
 ];
-const TOTAL = { key: "total", name: "9ダム合計", csvHeader: "合計", capacity: 76877 };
+const TOTAL = { key: "total", name: "9ダム合計", csvHeader: "合計", capacity: 78347 };
 const ALL = [...DAMS, TOTAL];
 
 class FetchDamsError extends Error {}

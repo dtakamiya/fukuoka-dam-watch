@@ -13,9 +13,9 @@
     {
       "key": "minamibata",
       "name": "南畑ダム",
-      "storage": 2919,
-      "capacity": 3650,
-      "rate": 80
+      "storage": 3048,
+      "capacity": 5120,
+      "rate": 59.5
     },
     {
       "key": "gokayama",
@@ -77,8 +77,8 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 48136,
-    "capacity": 76877,
-    "rate": 62.6
+    "storage": 48265,
+    "capacity": 78347,
+    "rate": 61.6
   }
 }

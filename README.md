@@ -213,7 +213,9 @@ Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`appl
 利水容量で割って `貯水率(%) = 貯水量 ÷ 利水容量 × 100`（小数第1位で四捨五入）。
 
 - 根拠: この方式で計算した合計貯水率が福岡市水道局の公表値と一致する。
-  2026-09-06 14:00 時点で 合計 `39,268 ÷ 76,877 = 51.1%`、公表値（`realtime-total.html`）も **51.1%**。
+  2026-10-25 09:00 時点で 合計 `31,053 ÷ 78,347 = 39.6%`、公表値（`realtime-total.html`）も **39.6%**。
+- 改訂履歴: 2026-10 に南畑ダムの利水容量が 3,650 → 5,120 に改訂された（2026-09-06 時点は旧値 `÷ 76,877` で公表値と一致）。
+  `history.json` の `rate` は毎回 `storage` から再計算するため、過去の点も新しい容量で揃う。
 - 利水容量の出典: BODIK 同データセットの HTML リソース
   [`realtime-list.html`](https://data.bodik.jp/dataset/d54fb22e-5b64-485c-8816-69f27ed1aaf1/resource/68982ce3-1c11-49df-b084-3a1049673bdf/download/realtime-list.html)
   に「利水容量」として明記されている値（単位: 千m3）。
@@ -223,7 +225,7 @@ Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`appl
 
 | ダム | key | 利水容量（千m3） |
 | --- | --- | ---: |
-| 南畑ダム | `minamibata` | 3,650 |
+| 南畑ダム | `minamibata` | 5,120 |
 | 五ケ山ダム | `gokayama` | 31,700 |
 | 脊振ダム | `sefuri` | 3,979 |
 | 曲渕ダム | `magaribuchi` | 2,368 |
@@ -232,7 +234,7 @@ Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`appl
 | 長谷ダム | `hase` | 4,850 |
 | 猪野ダム | `ino` | 3,650 |
 | 瑞梅寺ダム | `zuibaiji` | 1,220 |
-| 9ダム合計 | `total` | 76,877 |
+| 9ダム合計 | `total` | 78,347 |
 
 ## JSON スキーマ
 
@@ -251,10 +253,10 @@ Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`appl
   "bootstrapping": true,                      // 時系列がまだ35日未満なら true
   "source": { "name": "...", "dataset": "https://...", "attribution": "https://..." },
   "dams": [                                   // 9ダム（CSV 列順）
-    { "key": "minamibata", "name": "南畑ダム", "storage": 2597, "capacity": 3650, "rate": 71.2 }
+    { "key": "minamibata", "name": "南畑ダム", "storage": 2597, "capacity": 5120, "rate": 50.7 }
     // ...
   ],
-  "total": { "key": "total", "name": "9ダム合計", "storage": 39268, "capacity": 76877, "rate": 51.1 }
+  "total": { "key": "total", "name": "9ダム合計", "storage": 39268, "capacity": 78347, "rate": 50.1 }
 }
 ```
 
@@ -269,12 +271,12 @@ Twitter Card（`summary_large_image`）、favicon（SVG ＋ 16/32 PNG）、`appl
   "bootstrapping": true,
   "spanDays": 5.6,                            // series が実際にカバーしている日数
   "dams": [ { "key": "minamibata", "name": "南畑ダム" }, /* ... */ { "key": "total", "name": "9ダム合計" } ],
-  "capacities": { "minamibata": 3650, /* ... */ "total": 76877 },
+  "capacities": { "minamibata": 5120, /* ... */ "total": 78347 },
   "series": [                                 // 古い順。直近 hourlyDays 日は毎正時、それ以前は1日1点
     {
       "observedAt": "2026-09-01T00:00:00+09:00",
       "storage": { "minamibata": 2601, /* ... */ "total": 41788 },
-      "rate":    { "minamibata": 71.3, /* ... */ "total": 54.4 }
+      "rate":    { "minamibata": 50.8, /* ... */ "total": 53.3 }
     }
     // ...
   ]

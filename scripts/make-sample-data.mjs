@@ -20,7 +20,7 @@ const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const UNIT = "千m3";
 
 const DAMS = [
-  { key: "minamibata", name: "南畑ダム", capacity: 3650, start: 2600, drift: -6 },
+  { key: "minamibata", name: "南畑ダム", capacity: 5120, start: 2600, drift: -6 },
   { key: "gokayama", name: "五ケ山ダム", capacity: 31700, start: 17200, drift: -20 },
   { key: "sefuri", name: "脊振ダム", capacity: 3979, start: 3530, drift: -2 },
   { key: "magaribuchi", name: "曲渕ダム", capacity: 2368, start: 2090, drift: -3 },
@@ -31,7 +31,7 @@ const DAMS = [
   { key: "zuibaiji", name: "瑞梅寺ダム", capacity: 1220, start: 615, drift: -2 },
 ];
 const TOTAL = { key: "total", name: "9ダム合計" };
-const TOTAL_CAP = DAMS.reduce((n, d) => n + d.capacity, 0); // 76877
+const TOTAL_CAP = DAMS.reduce((n, d) => n + d.capacity, 0); // 78347
 
 // 120 日分を毎正時で生成し、本番と同じ保持ポリシー（直近35日は毎正時／古い分は日次）で間引く。
 // 90日・1年グラフ（長期推移ビュー）の動作確認用。
