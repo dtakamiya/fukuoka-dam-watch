@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-25T23:47:20.880Z",
+  "generatedAt": "2026-10-26T00:02:54.884Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 19.7,
+      "temperature": 19.6,
       "precipitation": 1.5,
       "weatherCode": 63,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "gokayama": {
-      "temperature": 19.7,
+      "temperature": 19.6,
       "precipitation": 1.1,
       "weatherCode": 63,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "sefuri": {
-      "temperature": 17.8,
+      "temperature": 17.6,
       "precipitation": 2,
       "weatherCode": 65,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "magaribuchi": {
-      "temperature": 18.7,
+      "temperature": 18.4,
       "precipitation": 2.2,
       "weatherCode": 65,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "egawa": {
       "temperature": 22,
       "precipitation": 0.3,
       "weatherCode": 55,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "kubara": {
-      "temperature": 18.6,
+      "temperature": 18.5,
       "precipitation": 0.6,
       "weatherCode": 61,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "hase": {
       "temperature": 18.8,
       "precipitation": 0.6,
       "weatherCode": 61,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "ino": {
       "temperature": 17.6,
       "precipitation": 0.5,
       "weatherCode": 61,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     },
     "zuibaiji": {
-      "temperature": 18.6,
+      "temperature": 18.3,
       "precipitation": 2.2,
       "weatherCode": 65,
-      "observedAt": "2026-10-26T08:45"
+      "observedAt": "2026-10-26T09:00"
     }
   }
 }
