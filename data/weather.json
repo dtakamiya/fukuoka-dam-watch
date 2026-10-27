@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-27T20:17:19.487Z",
+  "generatedAt": "2026-10-27T20:47:17.000Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 11.9,
+      "temperature": 11.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "gokayama": {
-      "temperature": 11.5,
+      "temperature": 11.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "sefuri": {
       "temperature": 9.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "magaribuchi": {
       "temperature": 12.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "egawa": {
-      "temperature": 12.2,
+      "temperature": 12,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "kubara": {
+      "temperature": 13.1,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-10-28T05:45"
+    },
+    "hase": {
       "temperature": 13.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
-    },
-    "hase": {
-      "temperature": 13.6,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "ino": {
       "temperature": 13.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     },
     "zuibaiji": {
       "temperature": 12,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-28T05:15"
+      "observedAt": "2026-10-28T05:45"
     }
   }
 }
