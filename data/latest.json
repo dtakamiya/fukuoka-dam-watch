@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T15:17:21.204Z",
-  "observedAt": "2026-10-29T00:00:00+09:00",
+  "generatedAt": "2026-10-28T16:17:18.962Z",
+  "observedAt": "2026-10-29T01:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -54,7 +54,7 @@
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 3327,
+      "storage": 3329,
       "capacity": 4850,
       "rate": 68.6
     },
@@ -68,15 +68,15 @@
     {
       "key": "zuibaiji",
       "name": "瑞梅寺ダム",
-      "storage": 1147,
+      "storage": 1148,
       "capacity": 1220,
-      "rate": 94
+      "rate": 94.1
     }
   ],
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 33535,
+    "storage": 33538,
     "capacity": 78347,
     "rate": 42.8
   }
