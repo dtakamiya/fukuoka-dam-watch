@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-28T19:47:14.063Z",
+  "generatedAt": "2026-10-28T20:17:20.237Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 11.5,
+      "temperature": 11.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "gokayama": {
-      "temperature": 10.6,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
-    },
-    "sefuri": {
       "temperature": 10.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
+    },
+    "sefuri": {
+      "temperature": 11,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-10-29T05:15"
     },
     "magaribuchi": {
-      "temperature": 12.9,
+      "temperature": 13,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "egawa": {
-      "temperature": 12.3,
+      "temperature": 12.2,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "kubara": {
       "temperature": 11.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "hase": {
-      "temperature": 12,
+      "temperature": 12.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "ino": {
-      "temperature": 11.6,
+      "temperature": 11.7,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     },
     "zuibaiji": {
-      "temperature": 13.3,
+      "temperature": 13.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-29T04:45"
+      "observedAt": "2026-10-29T05:15"
     }
   }
 }
