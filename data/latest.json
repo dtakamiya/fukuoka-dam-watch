@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-29T00:17:22.913Z",
-  "observedAt": "2026-10-29T09:00:00+09:00",
+  "generatedAt": "2026-10-29T01:17:18.733Z",
+  "observedAt": "2026-10-29T10:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -40,7 +40,7 @@
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 4633,
+      "storage": 4637,
       "capacity": 24000,
       "rate": 19.3
     },
@@ -61,22 +61,22 @@
     {
       "key": "ino",
       "name": "猪野ダム",
-      "storage": 2018,
+      "storage": 2019,
       "capacity": 3650,
       "rate": 55.3
     },
     {
       "key": "zuibaiji",
       "name": "瑞梅寺ダム",
-      "storage": 1157,
+      "storage": 1159,
       "capacity": 1220,
-      "rate": 94.8
+      "rate": 95
     }
   ],
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 33595,
+    "storage": 33602,
     "capacity": 78347,
     "rate": 42.9
   }
