@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T12:17:21.517Z",
+  "generatedAt": "2026-10-30T12:47:19.800Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 14,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
     "gokayama": {
       "temperature": 13.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
     "sefuri": {
-      "temperature": 12.2,
+      "temperature": 12.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
     "magaribuchi": {
       "temperature": 14.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
     "egawa": {
-      "temperature": 14.3,
+      "temperature": 13.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
     "kubara": {
-      "temperature": 16.8,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
-    },
-    "hase": {
-      "temperature": 17,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
-    },
-    "ino": {
       "temperature": 16.1,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
     },
-    "zuibaiji": {
-      "temperature": 14.9,
+    "hase": {
+      "temperature": 16.3,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-10-30T21:45"
+    },
+    "ino": {
+      "temperature": 15.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-10-30T21:15"
+      "observedAt": "2026-10-30T21:45"
+    },
+    "zuibaiji": {
+      "temperature": 14.8,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-10-30T21:45"
     }
   }
 }
