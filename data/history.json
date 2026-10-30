@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T00:17:19.841Z",
+  "generatedAt": "2026-10-30T01:17:21.128Z",
   "unit": "千m3",
   "retainDays": 400,
   "hourlyDays": 35,
@@ -23655,6 +23655,33 @@
         "hase": 70.2,
         "ino": 55.3,
         "zuibaiji": 97.3,
+        "total": 43.3
+      }
+    },
+    {
+      "observedAt": "2026-10-30T10:00:00+09:00",
+      "storage": {
+        "minamibata": 3171,
+        "gokayama": 14991,
+        "sefuri": 999,
+        "magaribuchi": 2368,
+        "egawa": 4707,
+        "kubara": 1047,
+        "hase": 3405,
+        "ino": 2019,
+        "zuibaiji": 1188,
+        "total": 33895
+      },
+      "rate": {
+        "minamibata": 61.9,
+        "gokayama": 47.3,
+        "sefuri": 25.1,
+        "magaribuchi": 100,
+        "egawa": 19.6,
+        "kubara": 71.7,
+        "hase": 70.2,
+        "ino": 55.3,
+        "zuibaiji": 97.4,
         "total": 43.3
       }
     }
