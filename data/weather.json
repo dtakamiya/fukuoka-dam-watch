@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T21:17:17.964Z",
+  "generatedAt": "2026-10-31T21:47:17.149Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 12.2,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "gokayama": {
-      "temperature": 11.1,
+      "temperature": 11,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "sefuri": {
       "temperature": 10.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "magaribuchi": {
       "temperature": 13.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "egawa": {
-      "temperature": 10.2,
+      "temperature": 10.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "kubara": {
-      "temperature": 12.1,
+      "temperature": 12,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "hase": {
+      "temperature": 12.3,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-11-01T06:45"
+    },
+    "ino": {
       "temperature": 12.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
-    },
-    "ino": {
-      "temperature": 12.6,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     },
     "zuibaiji": {
-      "temperature": 13.8,
+      "temperature": 13.7,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T06:15"
+      "observedAt": "2026-11-01T06:45"
     }
   }
 }
