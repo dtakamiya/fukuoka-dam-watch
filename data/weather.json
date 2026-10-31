@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-10-31T17:47:20.565Z",
+  "generatedAt": "2026-10-31T18:17:19.567Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 12.4,
+      "temperature": 12.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "gokayama": {
-      "temperature": 11.5,
+      "temperature": 11.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "sefuri": {
-      "temperature": 11.1,
+      "temperature": 10.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "magaribuchi": {
-      "temperature": 13.7,
+      "temperature": 13.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "egawa": {
-      "temperature": 11.2,
+      "temperature": 10.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "kubara": {
-      "temperature": 12.4,
+      "temperature": 12.5,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "hase": {
+      "temperature": 12.8,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-11-01T03:15"
+    },
+    "ino": {
       "temperature": 12.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
-    },
-    "ino": {
-      "temperature": 12.7,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     },
     "zuibaiji": {
-      "temperature": 13.9,
+      "temperature": 13.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-01T02:45"
+      "observedAt": "2026-11-01T03:15"
     }
   }
 }
