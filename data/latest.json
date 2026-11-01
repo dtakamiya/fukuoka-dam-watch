@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-01T02:17:15.287Z",
-  "observedAt": "2026-11-01T11:00:00+09:00",
+  "generatedAt": "2026-11-01T03:17:15.010Z",
+  "observedAt": "2026-11-01T12:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -54,9 +54,9 @@
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 3591,
+      "storage": 3594,
       "capacity": 4850,
-      "rate": 74
+      "rate": 74.1
     },
     {
       "key": "ino",
@@ -76,7 +76,7 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 34331,
+    "storage": 34334,
     "capacity": 78347,
     "rate": 43.8
   }
