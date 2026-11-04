@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-04T12:17:15.823Z",
-  "observedAt": "2026-11-04T21:00:00+09:00",
+  "generatedAt": "2026-11-04T13:17:18.285Z",
+  "observedAt": "2026-11-04T22:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -26,9 +26,9 @@
     {
       "key": "sefuri",
       "name": "脊振ダム",
-      "storage": 1084,
+      "storage": 1086,
       "capacity": 3979,
-      "rate": 27.2
+      "rate": 27.3
     },
     {
       "key": "magaribuchi",
@@ -76,7 +76,7 @@
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 34884,
+    "storage": 34886,
     "capacity": 78347,
     "rate": 44.5
   }
