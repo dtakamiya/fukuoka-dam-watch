@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-07T22:17:18.410Z",
+  "generatedAt": "2026-11-07T22:47:16.595Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 6.6,
+      "temperature": 7.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "gokayama": {
-      "temperature": 7.6,
+      "temperature": 8.3,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "sefuri": {
-      "temperature": 4.4,
+      "temperature": 5.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "magaribuchi": {
-      "temperature": 6.3,
+      "temperature": 7.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "egawa": {
-      "temperature": 9.3,
+      "temperature": 10,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "kubara": {
-      "temperature": 9,
+      "temperature": 9.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "hase": {
-      "temperature": 9.2,
+      "temperature": 10.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "ino": {
-      "temperature": 9.1,
+      "temperature": 9.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     },
     "zuibaiji": {
-      "temperature": 9.2,
+      "temperature": 9.8,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-08T07:15"
+      "observedAt": "2026-11-08T07:45"
     }
   }
 }
