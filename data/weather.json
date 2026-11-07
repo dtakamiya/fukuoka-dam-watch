@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-07T12:17:20.333Z",
+  "generatedAt": "2026-11-07T12:47:20.043Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 8.5,
+      "temperature": 8.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "gokayama": {
       "temperature": 8.7,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "sefuri": {
-      "temperature": 6.1,
+      "temperature": 5.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "magaribuchi": {
-      "temperature": 7.6,
+      "temperature": 7.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "egawa": {
       "temperature": 9.5,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "kubara": {
-      "temperature": 10,
+      "temperature": 9.9,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "hase": {
-      "temperature": 10.3,
+      "temperature": 10.2,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "ino": {
-      "temperature": 9.7,
+      "temperature": 9.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     },
     "zuibaiji": {
-      "temperature": 9.5,
+      "temperature": 9.4,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-07T21:15"
+      "observedAt": "2026-11-07T21:45"
     }
   }
 }
