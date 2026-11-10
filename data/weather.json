@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T14:47:19.102Z",
+  "generatedAt": "2026-11-10T15:18:19.478Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 11,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "gokayama": {
       "temperature": 10.4,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "sefuri": {
       "temperature": 9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "magaribuchi": {
       "temperature": 11.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "egawa": {
-      "temperature": 11.5,
+      "temperature": 11.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "kubara": {
-      "temperature": 11.8,
+      "temperature": 11.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "hase": {
-      "temperature": 12.1,
+      "temperature": 11.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "ino": {
-      "temperature": 11.7,
+      "temperature": 11.5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     },
     "zuibaiji": {
-      "temperature": 11.8,
+      "temperature": 12,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-10T23:45"
+      "observedAt": "2026-11-11T00:15"
     }
   }
 }
