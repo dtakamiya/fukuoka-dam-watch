@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-10T17:15:12.280Z",
+  "generatedAt": "2026-11-10T19:51:49.964Z",
   "unit": "千m3",
   "retainDays": 400,
   "hourlyDays": 35,
   "bootstrapping": false,
-  "spanDays": 70.5,
+  "spanDays": 70.7,
   "dams": [
     {
       "key": "minamibata",
@@ -23763,6 +23763,87 @@
         "hase": 86.9,
         "ino": 56.9,
         "zuibaiji": 99.5,
+        "total": 45.5
+      }
+    },
+    {
+      "observedAt": "2026-11-11T02:00:00+09:00",
+      "storage": {
+        "minamibata": 3091,
+        "gokayama": 15038,
+        "sefuri": 1143,
+        "magaribuchi": 2362,
+        "egawa": 5427,
+        "kubara": 1106,
+        "hase": 4215,
+        "ino": 2078,
+        "zuibaiji": 1215,
+        "total": 35675
+      },
+      "rate": {
+        "minamibata": 60.4,
+        "gokayama": 47.4,
+        "sefuri": 28.7,
+        "magaribuchi": 99.7,
+        "egawa": 22.6,
+        "kubara": 75.8,
+        "hase": 86.9,
+        "ino": 56.9,
+        "zuibaiji": 99.6,
+        "total": 45.5
+      }
+    },
+    {
+      "observedAt": "2026-11-11T03:00:00+09:00",
+      "storage": {
+        "minamibata": 3091,
+        "gokayama": 15038,
+        "sefuri": 1143,
+        "magaribuchi": 2362,
+        "egawa": 5427,
+        "kubara": 1106,
+        "hase": 4215,
+        "ino": 2078,
+        "zuibaiji": 1215,
+        "total": 35675
+      },
+      "rate": {
+        "minamibata": 60.4,
+        "gokayama": 47.4,
+        "sefuri": 28.7,
+        "magaribuchi": 99.7,
+        "egawa": 22.6,
+        "kubara": 75.8,
+        "hase": 86.9,
+        "ino": 56.9,
+        "zuibaiji": 99.6,
+        "total": 45.5
+      }
+    },
+    {
+      "observedAt": "2026-11-11T04:00:00+09:00",
+      "storage": {
+        "minamibata": 3089,
+        "gokayama": 15038,
+        "sefuri": 1143,
+        "magaribuchi": 2362,
+        "egawa": 5431,
+        "kubara": 1107,
+        "hase": 4215,
+        "ino": 2078,
+        "zuibaiji": 1215,
+        "total": 35678
+      },
+      "rate": {
+        "minamibata": 60.3,
+        "gokayama": 47.4,
+        "sefuri": 28.7,
+        "magaribuchi": 99.7,
+        "egawa": 22.6,
+        "kubara": 75.8,
+        "hase": 86.9,
+        "ino": 56.9,
+        "zuibaiji": 99.6,
         "total": 45.5
       }
     }
