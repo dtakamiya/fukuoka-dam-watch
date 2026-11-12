@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-12T13:17:17.227Z",
-  "observedAt": "2026-11-12T22:00:00+09:00",
+  "generatedAt": "2026-11-12T14:17:19.831Z",
+  "observedAt": "2026-11-12T23:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -68,15 +68,15 @@
     {
       "key": "zuibaiji",
       "name": "瑞梅寺ダム",
-      "storage": 1220,
+      "storage": 1218,
       "capacity": 1220,
-      "rate": 100
+      "rate": 99.8
     }
   ],
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 35712,
+    "storage": 35710,
     "capacity": 78347,
     "rate": 45.6
   }
