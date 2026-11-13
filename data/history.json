@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-13T02:51:04.648Z",
+  "generatedAt": "2026-11-13T10:48:19.860Z",
   "unit": "千m3",
   "retainDays": 400,
   "hourlyDays": 35,
   "bootstrapping": false,
-  "spanDays": 73,
+  "spanDays": 73.3,
   "dams": [
     {
       "key": "minamibata",
@@ -24087,6 +24087,222 @@
         "hase": 86.8,
         "ino": 56.6,
         "zuibaiji": 99.5,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T12:00:00+09:00",
+      "storage": {
+        "minamibata": 3049,
+        "gokayama": 14998,
+        "sefuri": 1154,
+        "magaribuchi": 2345,
+        "egawa": 5546,
+        "kubara": 1130,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35713
+      },
+      "rate": {
+        "minamibata": 59.6,
+        "gokayama": 47.3,
+        "sefuri": 29,
+        "magaribuchi": 99,
+        "egawa": 23.1,
+        "kubara": 77.4,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T13:00:00+09:00",
+      "storage": {
+        "minamibata": 3049,
+        "gokayama": 14998,
+        "sefuri": 1154,
+        "magaribuchi": 2343,
+        "egawa": 5550,
+        "kubara": 1131,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35716
+      },
+      "rate": {
+        "minamibata": 59.6,
+        "gokayama": 47.3,
+        "sefuri": 29,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.5,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T14:00:00+09:00",
+      "storage": {
+        "minamibata": 3049,
+        "gokayama": 14998,
+        "sefuri": 1154,
+        "magaribuchi": 2343,
+        "egawa": 5550,
+        "kubara": 1131,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35716
+      },
+      "rate": {
+        "minamibata": 59.6,
+        "gokayama": 47.3,
+        "sefuri": 29,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.5,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T15:00:00+09:00",
+      "storage": {
+        "minamibata": 3047,
+        "gokayama": 14998,
+        "sefuri": 1156,
+        "magaribuchi": 2343,
+        "egawa": 5550,
+        "kubara": 1131,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35716
+      },
+      "rate": {
+        "minamibata": 59.5,
+        "gokayama": 47.3,
+        "sefuri": 29.1,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.5,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T16:00:00+09:00",
+      "storage": {
+        "minamibata": 3047,
+        "gokayama": 14998,
+        "sefuri": 1156,
+        "magaribuchi": 2343,
+        "egawa": 5550,
+        "kubara": 1132,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35717
+      },
+      "rate": {
+        "minamibata": 59.5,
+        "gokayama": 47.3,
+        "sefuri": 29.1,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.5,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T17:00:00+09:00",
+      "storage": {
+        "minamibata": 3047,
+        "gokayama": 14998,
+        "sefuri": 1156,
+        "magaribuchi": 2341,
+        "egawa": 5554,
+        "kubara": 1132,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1215,
+        "total": 35719
+      },
+      "rate": {
+        "minamibata": 59.5,
+        "gokayama": 47.3,
+        "sefuri": 29.1,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.5,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.6,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T18:00:00+09:00",
+      "storage": {
+        "minamibata": 3045,
+        "gokayama": 14998,
+        "sefuri": 1156,
+        "magaribuchi": 2341,
+        "egawa": 5554,
+        "kubara": 1133,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1216,
+        "total": 35719
+      },
+      "rate": {
+        "minamibata": 59.5,
+        "gokayama": 47.3,
+        "sefuri": 29.1,
+        "magaribuchi": 98.9,
+        "egawa": 23.1,
+        "kubara": 77.6,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.7,
+        "total": 45.6
+      }
+    },
+    {
+      "observedAt": "2026-11-13T19:00:00+09:00",
+      "storage": {
+        "minamibata": 3045,
+        "gokayama": 14991,
+        "sefuri": 1156,
+        "magaribuchi": 2341,
+        "egawa": 5559,
+        "kubara": 1133,
+        "hase": 4209,
+        "ino": 2067,
+        "zuibaiji": 1216,
+        "total": 35717
+      },
+      "rate": {
+        "minamibata": 59.5,
+        "gokayama": 47.3,
+        "sefuri": 29.1,
+        "magaribuchi": 98.9,
+        "egawa": 23.2,
+        "kubara": 77.6,
+        "hase": 86.8,
+        "ino": 56.6,
+        "zuibaiji": 99.7,
         "total": 45.6
       }
     }
