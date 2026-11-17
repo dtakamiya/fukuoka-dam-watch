@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17T20:17:22.379Z",
+  "generatedAt": "2026-11-17T20:44:06.908Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 12.2,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "gokayama": {
-      "temperature": 11.5,
+      "temperature": 11.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "sefuri": {
       "temperature": 10.8,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "magaribuchi": {
       "temperature": 13,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "egawa": {
-      "temperature": 13.1,
+      "temperature": 12.9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "kubara": {
-      "temperature": 13.1,
+      "temperature": 13,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "hase": {
       "temperature": 13.3,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
     },
     "ino": {
-      "temperature": 12.8,
-      "precipitation": 0,
-      "weatherCode": 3,
-      "observedAt": "2026-11-18T05:15"
-    },
-    "zuibaiji": {
-      "temperature": 13.3,
+      "temperature": 12.9,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-18T05:15"
+      "observedAt": "2026-11-18T05:30"
+    },
+    "zuibaiji": {
+      "temperature": 13.2,
+      "precipitation": 0,
+      "weatherCode": 2,
+      "observedAt": "2026-11-18T05:30"
     }
   }
 }
