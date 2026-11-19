@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-19T03:47:17.200Z",
+  "generatedAt": "2026-11-19T04:17:16.945Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 9,
+      "temperature": 9.1,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "gokayama": {
       "temperature": 9.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "sefuri": {
-      "temperature": 6.9,
+      "temperature": 7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "magaribuchi": {
-      "temperature": 9.3,
+      "temperature": 9.4,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "egawa": {
-      "temperature": 9.4,
+      "temperature": 9.5,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "kubara": {
-      "temperature": 9.8,
+      "temperature": 9.9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "hase": {
-      "temperature": 10,
+      "temperature": 10.2,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "ino": {
-      "temperature": 9.4,
+      "temperature": 9.5,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     },
     "zuibaiji": {
-      "temperature": 9.4,
+      "temperature": 9.6,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-19T12:45"
+      "observedAt": "2026-11-19T13:15"
     }
   }
 }
