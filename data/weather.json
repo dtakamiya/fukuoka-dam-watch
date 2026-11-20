@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-20T09:47:17.457Z",
+  "generatedAt": "2026-11-20T10:17:21.614Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 6.6,
+      "temperature": 6.5,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "gokayama": {
-      "temperature": 6,
+      "temperature": 5.7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "sefuri": {
-      "temperature": 4.3,
+      "temperature": 4.1,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "magaribuchi": {
-      "temperature": 6.6,
+      "temperature": 6.3,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "egawa": {
       "temperature": 7.2,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "kubara": {
-      "temperature": 9.1,
+      "temperature": 9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "hase": {
-      "temperature": 9.4,
+      "temperature": 9.3,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "ino": {
       "temperature": 8.7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     },
     "zuibaiji": {
-      "temperature": 6.6,
+      "temperature": 6.3,
       "precipitation": 0.1,
       "weatherCode": 51,
-      "observedAt": "2026-11-20T18:45"
+      "observedAt": "2026-11-20T19:15"
     }
   }
 }
