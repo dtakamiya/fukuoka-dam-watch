@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20T08:47:17.756Z",
+  "generatedAt": "2026-11-20T09:17:25.449Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 6.7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "gokayama": {
-      "temperature": 6.2,
+      "temperature": 6.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "sefuri": {
       "temperature": 4.5,
       "precipitation": 0,
-      "weatherCode": 2,
-      "observedAt": "2026-11-20T17:45"
+      "weatherCode": 3,
+      "observedAt": "2026-11-20T18:15"
     },
     "magaribuchi": {
-      "temperature": 7.1,
-      "precipitation": 0,
-      "weatherCode": 2,
-      "observedAt": "2026-11-20T17:45"
+      "temperature": 6.9,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-11-20T18:15"
     },
     "egawa": {
-      "temperature": 7.4,
+      "temperature": 7.2,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "kubara": {
       "temperature": 8.9,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "hase": {
-      "temperature": 9.1,
+      "temperature": 9.2,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "ino": {
-      "temperature": 8.5,
+      "temperature": 8.6,
       "precipitation": 0,
       "weatherCode": 3,
-      "observedAt": "2026-11-20T17:45"
+      "observedAt": "2026-11-20T18:15"
     },
     "zuibaiji": {
-      "temperature": 7.3,
-      "precipitation": 0,
-      "weatherCode": 2,
-      "observedAt": "2026-11-20T17:45"
+      "temperature": 7,
+      "precipitation": 0.1,
+      "weatherCode": 51,
+      "observedAt": "2026-11-20T18:15"
     }
   }
 }
