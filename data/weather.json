@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-21T19:47:13.730Z",
+  "generatedAt": "2026-11-21T20:00:19.664Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 5.2,
+      "temperature": 5.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "gokayama": {
-      "temperature": 4.6,
+      "temperature": 4.5,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "sefuri": {
-      "temperature": 3,
-      "precipitation": 0,
-      "weatherCode": 0,
-      "observedAt": "2026-11-22T04:45"
-    },
-    "magaribuchi": {
-      "temperature": 5.6,
+      "temperature": 2.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
+    },
+    "magaribuchi": {
+      "temperature": 5.5,
+      "precipitation": 0,
+      "weatherCode": 1,
+      "observedAt": "2026-11-22T05:00"
     },
     "egawa": {
       "temperature": 5,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "kubara": {
       "temperature": 7,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "hase": {
       "temperature": 7.2,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "ino": {
       "temperature": 6.5,
       "precipitation": 0,
       "weatherCode": 2,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     },
     "zuibaiji": {
-      "temperature": 5.8,
+      "temperature": 5.7,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T04:45"
+      "observedAt": "2026-11-22T05:00"
     }
   }
 }
