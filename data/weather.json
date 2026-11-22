@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T14:22:45.025Z",
+  "generatedAt": "2026-11-22T14:47:21.214Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 4.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "gokayama": {
       "temperature": 3.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "sefuri": {
-      "temperature": 2.7,
+      "temperature": 2.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "magaribuchi": {
-      "temperature": 5.9,
-      "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-11-22T23:15"
-    },
-    "egawa": {
-      "temperature": 3.3,
+      "temperature": 5.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
+    },
+    "egawa": {
+      "temperature": 3.5,
+      "precipitation": 0,
+      "weatherCode": 0,
+      "observedAt": "2026-11-22T23:45"
     },
     "kubara": {
       "temperature": 5.8,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "hase": {
-      "temperature": 6,
+      "temperature": 6.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "ino": {
-      "temperature": 5.5,
+      "temperature": 5.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-22T23:15"
+      "observedAt": "2026-11-22T23:45"
     },
     "zuibaiji": {
       "temperature": 6,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-11-22T23:15"
+      "weatherCode": 0,
+      "observedAt": "2026-11-22T23:45"
     }
   }
 }
