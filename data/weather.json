@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T22:23:11.126Z",
+  "generatedAt": "2026-11-23T22:47:24.079Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
@@ -9,55 +9,55 @@
       "temperature": 12.1,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "gokayama": {
       "temperature": 11.3,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "sefuri": {
-      "temperature": 10.8,
+      "temperature": 10.2,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "magaribuchi": {
-      "temperature": 13,
+      "temperature": 12.3,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "egawa": {
-      "temperature": 11.9,
+      "temperature": 12,
       "precipitation": 0.7,
       "weatherCode": 63,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "kubara": {
-      "temperature": 12.9,
+      "temperature": 13.4,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "hase": {
-      "temperature": 13.2,
+      "temperature": 13.6,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "ino": {
-      "temperature": 13.5,
+      "temperature": 13.4,
       "precipitation": 0.3,
       "weatherCode": 55,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     },
     "zuibaiji": {
-      "temperature": 13.1,
+      "temperature": 12.4,
       "precipitation": 0.4,
       "weatherCode": 61,
-      "observedAt": "2026-11-24T07:15"
+      "observedAt": "2026-11-24T07:45"
     }
   }
 }
