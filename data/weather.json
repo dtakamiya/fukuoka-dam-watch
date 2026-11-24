@@ -1,63 +1,63 @@
 {
-  "generatedAt": "2026-11-24T16:47:23.716Z",
+  "generatedAt": "2026-11-24T17:17:18.944Z",
   "source": {
     "name": "Open-Meteo",
     "url": "https://open-meteo.com/"
   },
   "dams": {
     "minamibata": {
-      "temperature": 3.2,
+      "temperature": 3.3,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "gokayama": {
-      "temperature": 2.7,
+      "temperature": 2.8,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "sefuri": {
-      "temperature": 0.9,
+      "temperature": 1.1,
       "precipitation": 0,
-      "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "weatherCode": 0,
+      "observedAt": "2026-11-25T02:15"
     },
     "magaribuchi": {
-      "temperature": 3.5,
+      "temperature": 3.6,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "egawa": {
       "temperature": 3.6,
       "precipitation": 0,
       "weatherCode": 0,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "kubara": {
-      "temperature": 4.8,
+      "temperature": 4.9,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "hase": {
       "temperature": 5.1,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "ino": {
       "temperature": 4.4,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     },
     "zuibaiji": {
-      "temperature": 3.6,
+      "temperature": 3.7,
       "precipitation": 0,
       "weatherCode": 1,
-      "observedAt": "2026-11-25T01:45"
+      "observedAt": "2026-11-25T02:15"
     }
   }
 }
