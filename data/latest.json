@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T19:17:19.863Z",
-  "observedAt": "2026-11-27T04:00:00+09:00",
+  "generatedAt": "2026-11-26T20:17:20.127Z",
+  "observedAt": "2026-11-27T05:00:00+09:00",
   "unit": "千m3",
   "bootstrapping": false,
   "source": {
@@ -33,28 +33,28 @@
     {
       "key": "magaribuchi",
       "name": "曲渕ダム",
-      "storage": 2335,
+      "storage": 2334,
       "capacity": 2368,
       "rate": 98.6
     },
     {
       "key": "egawa",
       "name": "江川ダム",
-      "storage": 6403,
+      "storage": 6408,
       "capacity": 24000,
       "rate": 26.7
     },
     {
       "key": "kubara",
       "name": "久原ダム",
-      "storage": 1296,
+      "storage": 1297,
       "capacity": 1460,
       "rate": 88.8
     },
     {
       "key": "hase",
       "name": "長谷ダム",
-      "storage": 4621,
+      "storage": 4624,
       "capacity": 4850,
       "rate": 95.3
     },
@@ -68,16 +68,16 @@
     {
       "key": "zuibaiji",
       "name": "瑞梅寺ダム",
-      "storage": 1213,
+      "storage": 1214,
       "capacity": 1220,
-      "rate": 99.4
+      "rate": 99.5
     }
   ],
   "total": {
     "key": "total",
     "name": "9ダム合計",
-    "storage": 37481,
+    "storage": 37490,
     "capacity": 78347,
-    "rate": 47.8
+    "rate": 47.9
   }
 }
